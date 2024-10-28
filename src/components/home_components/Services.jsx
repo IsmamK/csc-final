@@ -37,13 +37,13 @@ const Services = ({ divider,bgColor,textColor }) => {
     <div className='relative'>
       <img src={divider || ""} className='absolute top-0 z-100'  />
 
-      <div className=' p-10'
+      <div className=''
       style={{ backgroundColor: bgColor, color: textColor }}>
-        <h1 className="text-7xl  font-extrabold text-center my-10 ">Our Services</h1>
+        <h1 className="text-5xl lg:text-7xl font-extrabold text-center my-10 ">Our Services</h1>
 
         <div className="grid mb-8 gap-10  rounded-lg  md:mb-12 md:grid-cols-2   mt-4 w-3/4 mx-auto">
           {servicesList.map((service, index) => (
-            <figure key={index} className="flex flex-col shadow-md items-center justify-center p-8 text-center  border border-gray-400 rounded-lg ">
+            <figure key={index} className="flex flex-col shadow-md items-center  justify-center p-8 text-center  border border-gray-400 bg-csc text-black rounded-lg ">
               <blockquote className="max-w-2xl mx-auto mb-4  lg:mb-8 ">
                 <h3 className="text-lg font-semibold ">{service.title}</h3>
                 <p className="my-4">{service.description}</p>

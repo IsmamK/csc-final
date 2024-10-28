@@ -7,7 +7,7 @@ const Location = ({ divider,bgColor,textColor }) => {
       <img src={divider || ""}  className='absolute top-0 w-full' />
 
       {/* Location Section */}
-      <div className='max-w-7xl mx-auto px-6 p-20'>
+      <div className='max-w-7xl mx-auto px-6 p-10'>
         <h1 className='text-6xl font-extrabold text-center mb-16 leading-tight'>Our Location</h1>
         
         <div className='grid gap-12 md:grid-cols-2 items-start'>

@@ -12,7 +12,7 @@ const Navbar = () => {
   const handleLinkClick = () => setIsDropdownOpen(false);
 
   return (
-    <div className="sticky top-0 shadow-lg z-50 relative"> {/* Ensure sticky with z-index */}
+    <div className="sticky top-0 shadow-lg z-50 "> {/* Ensure sticky with z-index */}
       <div className="navbar bg-black text-csc">
         <div className="navbar-start">
           <div className="dropdown">
@@ -84,7 +84,7 @@ const Navbar = () => {
             </ul>
           </div>
           <Link to="home" className="btn btn-ghost">
-            <img src="csclogo.png" alt="Company Logo" className="h-40 absolute left-10" />
+            <img src="csclogo.png" alt="Company Logo" className="h-40 absolute left-10 hidden lg:block" />
           </Link>
         </div>
         <div className="navbar-center hidden lg:flex">
@@ -118,6 +118,12 @@ const Navbar = () => {
             </li>
           </ul>
         </div>
+
+        
+            <img src="csclogo.png" alt="Company Logo" className="h-40 absolute right-10 lg:hidden" />
+     
+    
+  
       </div>
     </div>
   );

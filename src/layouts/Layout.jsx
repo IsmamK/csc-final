@@ -50,7 +50,7 @@ const Layout = () => {
     
       <Navbar />
       <Outlet context={{ getDivider, availableShapes }} />
-      <Footer divider={getDivider('triangle')} bgColor={'#d7ac70'} textColor={'black'}/>
+      <Footer divider={getDivider('triangle')} bgColor={'#b9965b'} textColor={'black'}/>
     </>
   );
 };

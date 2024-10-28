@@ -11,7 +11,7 @@ const Contact = ({ divider,bgColor,textColor }) => {
       <div className='max-w-7xl mx-auto p-10'
        
       >
-        <h1 className='text-6xl font-extrabold text-center mb-16  leading-tight'>Let’s Talk</h1>
+        <h1 className='text-5xl lg:text-7xl font-extrabold text-center mb-16  leading-tight'>Let’s Talk</h1>
         
         <div className='grid gap-12 md:grid-cols-2 items-center'>
           

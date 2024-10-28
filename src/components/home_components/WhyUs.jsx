@@ -35,12 +35,12 @@ const WhyUs = ({ divider, title, reasons,bgColor,textColor }) => {
   const displayReasons = reasons || defaultReasons;
 
   return (
-    <div className="relative py-16"
+    <div className="relative pt-10 pb-16"
     style={{ backgroundColor: bgColor, color: textColor }}
     >
-            <img src={divider || ""} className='absolute top-0 z-100 over' />
+            {/* <img src={divider || ""} className='absolute top-0 z-100 over' /> */}
 
-      <h2 className="text-5xl font-extrabold text-center  mb-12 tracking-wide mt-20 md:mt-40">
+      <h2 className="text-5xl font-extrabold text-center  mb-12 tracking-wide ">
         {displayTitle}
       </h2>
 
@@ -48,7 +48,7 @@ const WhyUs = ({ divider, title, reasons,bgColor,textColor }) => {
         {displayReasons.map((reason, index) => (
           <div 
             key={index} 
-            className="bg-gray-700 backdrop-blur-lg p-8 rounded-xl shadow-2xl transform transition hover:scale-105 hover:bg-gray-600 duration-300 ease-in-out text-center"
+            className="bg-black backdrop-blur-lg p-8 rounded-xl shadow-2xl transform transition hover:scale-105 hover:bg-gray-600 duration-300 ease-in-out text-center"
           >
             <div className="mb-4">{reason.icon}</div>
             <h3 className="text-2xl font-semibold text-csc mb-2">{reason.title}</h3>

@@ -30,7 +30,7 @@ const Team = ({ bgColor, textColor }) => {
   }, []);
 
   return (
-    <section className="py-10 " style={{ backgroundColor: bgColor, color: textColor }}>
+    <section className="pb-10 " style={{ backgroundColor: bgColor, color: textColor }}>
       <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
         <div className="flex justify-between items-center flex-col lg:flex-row md:mt-20">
           <div className="w-full lg:w-1/2">

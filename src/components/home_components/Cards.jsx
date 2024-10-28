@@ -65,11 +65,11 @@ const Cards = ({divider,bgColor,textColor}) => {
   ];
 
   return (
-    <div className='relative '>
+    <div className='relative'>
             <img src={divider || ""} className='absolute top-0 z-100' />
 
  
-    <div className='hero p-10 lg:p-30 flex flex-col-reverse md:flex-col gap-10 md:gap-20' style={{ backgroundColor: bgColor, color: textColor }} >
+    <div className='hero flex flex-col-reverse md:flex-col gap-10 md:gap-20 pb-10' style={{ backgroundColor: bgColor, color: textColor }} >
       
     <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5 items-center justify-center mt-10 lg:mt-28">
       {cardsData.map((card, index) => (

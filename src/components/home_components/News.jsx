@@ -26,8 +26,8 @@ const News = ({ divider, bgColor = '#f8fafc', textColor = '#333' }) => {
     <div className="relative" style={{ backgroundColor: bgColor, color: textColor }}>
       {divider && <img src={divider} className="absolute top-0 w-full" alt="Divider" />}
 
-      <div className="px-6 py-24 md:px-20 mx-auto text-center">
-        <h2 className="text-5xl font-extrabold mb-12">Latest News</h2>
+      <div className="px-6 py-10 md:px-20 mx-auto text-center">
+        <h2 className="text-5xl lg:text-7xl font-extrabold mb-12">Latest News</h2>
 
         <div className="grid gap-10 grid-cols-1 lg:grid-cols-3">
           {newsItems.map((news, index) => (
