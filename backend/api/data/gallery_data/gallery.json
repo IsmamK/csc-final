@@ -1,0 +1,79 @@
+{
+    "title": "Our Gallery", 
+    "subtitle": "Discover our stunning collection of images",
+    "items": [
+    {
+      "image": "https://flowbite.s3.amazonaws.com/docs/gallery/masonry/image.jpg",
+      "subtitle": "The First Light",
+      "title": "Shooting Stars",
+      "description": "Photo booth fam kinfolk cold-pressed sriracha leggings jianbing microdosing tousled waistcoat."
+    },
+    {
+      "image": "https://flowbite.s3.amazonaws.com/docs/gallery/masonry/image-1.jpg",
+      "subtitle": "The Second Light",
+      "title": "The Catalyzer",
+      "description": "Photo booth fam kinfolk cold-pressed sriracha leggings jianbing microdosing tousled waistcoat."
+    },
+    {
+      "image": "https://flowbite.s3.amazonaws.com/docs/gallery/masonry/image-2.jpg",
+      "subtitle": "The Third Light",
+      "title": "The 400 Blows",
+      "description": "Photo booth fam kinfolk cold-pressed sriracha leggings jianbing microdosing tousled waistcoat."
+    },
+    {
+      "image": "https://flowbite.s3.amazonaws.com/docs/gallery/masonry/image-3.jpg",
+      "subtitle": "The Fourth Light",
+      "title": "Neptune",
+      "description": "Photo booth fam kinfolk cold-pressed sriracha leggings jianbing microdosing tousled waistcoat."
+    },
+    {
+      "image": "https://flowbite.s3.amazonaws.com/docs/gallery/masonry/image-4.jpg",
+      "subtitle": "The Fifth Light",
+      "title": "Holden Caulfield",
+      "description": "Photo booth fam kinfolk cold-pressed sriracha leggings jianbing microdosing tousled waistcoat."
+    },
+    {
+      "image": "https://flowbite.s3.amazonaws.com/docs/gallery/masonry/image-5.jpg",
+      "subtitle": "The Sixth Light",
+      "title": "Alper Kamu",
+      "description": "Photo booth fam kinfolk cold-pressed sriracha leggings jianbing microdosing tousled waistcoat."
+    },
+    {
+      "image": "https://flowbite.s3.amazonaws.com/docs/gallery/masonry/image-6.jpg",
+      "subtitle": "The Seventh Light",
+      "title": "The Awakening",
+      "description": "Photo booth fam kinfolk cold-pressed sriracha leggings jianbing microdosing tousled waistcoat."
+    },
+    {
+      "image": "https://flowbite.s3.amazonaws.com/docs/gallery/masonry/image-7.jpg",
+      "subtitle": "The Eighth Light",
+      "title": "The Discovery",
+      "description": "Photo booth fam kinfolk cold-pressed sriracha leggings jianbing microdosing tousled waistcoat."
+    },
+    {
+      "image": "https://flowbite.s3.amazonaws.com/docs/gallery/masonry/image-8.jpg",
+      "subtitle": "The Ninth Light",
+      "title": "The Horizon",
+      "description": "Photo booth fam kinfolk cold-pressed sriracha leggings jianbing microdosing tousled waistcoat."
+    },
+    {
+      "image": "https://flowbite.s3.amazonaws.com/docs/gallery/masonry/image-9.jpg",
+      "subtitle": "The Tenth Light",
+      "title": "The Reflection",
+      "description": "Photo booth fam kinfolk cold-pressed sriracha leggings jianbing microdosing tousled waistcoat."
+    },
+    {
+      "image": "https://flowbite.s3.amazonaws.com/docs/gallery/masonry/image-10.jpg",
+      "subtitle": "The Eleventh Light",
+      "title": "The Journey",
+      "description": "Photo booth fam kinfolk cold-pressed sriracha leggings jianbing microdosing tousled waistcoat."
+    },
+    {
+      "image": "https://flowbite.s3.amazonaws.com/docs/gallery/masonry/image-11.jpg",
+      "subtitle": "The Twelfth Light",
+      "title": "The Dream",
+      "description": "Photo booth fam kinfolk cold-pressed sriracha leggings jianbing microdosing tousled waistcoat."
+    }
+  ]
+  
+  }

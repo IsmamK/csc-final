@@ -1,0 +1,34 @@
+{
+
+    "contact1": {
+        "header": "Get In Touch",
+        "subHeader": "Whether you have a concern or simply want to say hello, We are here to facilitate communication with you.",
+        "buttonText": "Contact Us",
+        "emailLabel": "Email Address",
+        "phoneLabel": "Phone Number",
+        "email": "pagedone@gmail.com",
+        "phone": "470-601-1911",
+        "locations": [
+          {
+            "country": "United Kingdom",
+            "address": "123 High Street, Westminster, London",
+            "imgSrc": "https://pagedone.io/asset/uploads/1696246502.png"
+          },
+          {
+            "country": "Germany",
+            "address": "101 Unter den Linden, Mitte District, Berlin",
+            "imgSrc": "https://pagedone.io/asset/uploads/1696246522.png"
+          },
+          {
+            "country": "France",
+            "address": "456 Rue de la Paix, 8th Arrondissement, Paris",
+            "imgSrc": "https://pagedone.io/asset/uploads/1696246551.png"
+          },
+          {
+            "country": "Switzerland",
+            "address": "987 Bahnhofstrasse, Zurich City Center, Zurich",
+            "imgSrc": "https://pagedone.io/asset/uploads/1696246565.png"
+          }
+        ]
+      }
+}
