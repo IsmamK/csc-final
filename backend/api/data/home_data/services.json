@@ -1,0 +1,35 @@
+{
+    "bgColor": "white",
+    "textColor": "black",
+    "cardBgColor": "#f7fafc",
+    "cardTextColor": "black",
+    "iconColor": "blue",
+    "title": "Our Peoples",
+    "description": "This is a section of some simple filler text, also known as placeholder text. It shares some characteristics of a real written text but is random or otherwise generated.",
+    "services": [
+        {
+            "title": "Growth",
+            "description": "Placeholder text for Growth service. This is a section of some simple filler text, also known as placeholder text. It shares some characteristics of a real written text."
+        },
+        {
+            "title": "Security",
+            "description": "Placeholder text for Security service. This is a section of some simple filler text, also known as placeholder text. It shares some characteristics of a real written text."
+        },
+        {
+            "title": "Cloud",
+            "description": "Placeholder text for Cloud service. This is a section of some simple filler text, also known as placeholder text. It shares some characteristics of a real written text."
+        },
+        {
+            "title": "Speed",
+            "description": "Placeholder text for Speed service. This is a section of some simple filler text, also known as placeholder text. It shares some characteristics of a real written text."
+        },
+        {
+            "title": "Support",
+            "description": "Placeholder text for Support service. This is a section of some simple filler text, also known as placeholder text. It shares some characteristics of a real written text."
+        },
+        {
+            "title": "Dark Mode",
+            "description": "Placeholder text for Dark Mode service. This is a section of some simple filler text, also known as placeholder text. It shares some characteristics of a real written text."
+        }
+    ]
+}

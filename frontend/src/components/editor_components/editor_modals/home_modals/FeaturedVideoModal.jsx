@@ -1,27 +1,35 @@
-import React, { useState } from 'react';
+import React, { useState,useEffect } from 'react';
 import { HexColorPicker } from 'react-colorful';
 
 const FeaturedVideoModal = ({ isOpen, onClose }) => {
-  const initialData = {
-    title: "Discover Our Vision",
-    description: "Learn more about our company, values, and mission through this short video. We are committed to delivering innovative solutions and fostering strong relationships with our clients.",
-    button1: {
-      text: "Get started",
-      link: "#",
-    },
-    button2: {
-      text: "Learn more",
-      link: "#",
-    },
-    videoSrc: "https://www.youtube.com/embed/KaLxCiilHns",
-    colors: {
-      bgColor: '#ffffff', // Background color for the section
-      textColor: '#333333', // Text color
-    },
-  };
+  const apiUrl = import.meta.env.VITE_API_URL;
 
-  const [data, setData] = useState(initialData);
+  
 
+
+  const [data, setData] = useState({
+    "title": "",
+    "description": "",
+    "button1": {
+      "text": "",
+      "link": ""
+    },
+    "button2": {
+      "text": "e",
+      "link": ""
+    },
+    "videoSrc": "",
+    "colors": {
+      "bgColor": "",
+      "textColor": ""
+    }
+  });
+
+  useEffect(()=>{
+    fetch(`${apiUrl}/home/featured-video/`)
+    .then(res=>res.json())
+    .then(data=>setData(data))
+  },[])
   const handleInputChange = (field, value) => {
     setData({ ...data, [field]: value });
   };
@@ -40,10 +48,26 @@ const FeaturedVideoModal = ({ isOpen, onClose }) => {
     setData({ ...data, colors: { ...data.colors, [colorField]: value } });
   };
 
-  const handleSubmit = () => {
-    console.log(data);
-    // You can add additional functionality here, like sending the updated data to your backend or state management.
-  };
+
+  const handleSubmit = async () => {
+    try {
+      const response = await fetch(`${apiUrl}/home/featured-video/`, {
+        method: 'PATCH',
+        headers: {
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify(data)
+      });
+      if (response.ok) {
+        alert('Featured Video updated successfully!');
+      } else {
+        alert('Failed to update featured video.');
+      }
+    } catch (error) {
+      console.error('Error updating news:', error);
+      alert('Error updating news.');
+    }
+  }
 
   return (
     <dialog className={`modal ${isOpen ? 'modal-open' : ''}`}>

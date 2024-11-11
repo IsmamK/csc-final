@@ -1,20 +1,49 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 
 const CarouselModal = ({ isOpen, onClose }) => {
+  const apiUrl = import.meta.env.VITE_API_URL;
+  
   // Initial state with predefined images
-  const [images, setImages] = useState([
-    "https://flowbite.com/docs/images/carousel/carousel-1.svg",
-    "https://flowbite.com/docs/images/carousel/carousel-2.svg",
-    "https://flowbite.com/docs/images/carousel/carousel-3.svg",
-    "https://flowbite.com/docs/images/carousel/carousel-4.svg",
-    "https://flowbite.com/docs/images/carousel/carousel-5.svg",
-  ]);
+  const [images, setImages] = useState([]);
+
+  useEffect(() => {
+    // Fetch the data from the API
+    const fetchImages = async () => {
+      try {
+        const response = await fetch(`${apiUrl}/home/carousel`);
+        if (!response.ok) {
+          throw new Error('Failed to fetch images');
+        }
+        const data = await response.json();
+        setImages(data); // Update the images state
+      } catch (error) {
+        console.error('Error fetching images:', error);
+      }
+    };
+
+    fetchImages();
+  }, [apiUrl]);
+
+  // Helper function to convert file to Base64
+  const fileToBase64 = (file) => {
+    return new Promise((resolve, reject) => {
+      const reader = new FileReader();
+      reader.onload = () => resolve(reader.result); // Resolve with Base64 string
+      reader.onerror = (error) => reject(error); // Reject on error
+      reader.readAsDataURL(file); // Read file as Data URL (Base64)
+    });
+  };
 
   // Handle image upload
-  const handleImageUpload = (event) => {
+  const handleImageUpload = async (event) => {
     const files = Array.from(event.target.files);
-    const newImages = files.map(file => URL.createObjectURL(file)); // Create local URLs for uploaded images
-    setImages((prevImages) => [...prevImages, ...newImages]);
+    try {
+      // Convert each file to Base64
+      const base64Images = await Promise.all(files.map(fileToBase64));
+      setImages((prevImages) => [...prevImages, ...base64Images]);
+    } catch (error) {
+      console.error('Error converting files to Base64:', error);
+    }
   };
 
   // Handle removing an image
@@ -22,11 +51,31 @@ const CarouselModal = ({ isOpen, onClose }) => {
     setImages((prevImages) => prevImages.filter((_, i) => i !== index));
   };
 
-  // Handle form submission (if needed)
-  const handleSubmit = () => {
-    // Here you can handle the submission logic (e.g., API call)
-    console.log('Updated Carousel Images:', images);
+  // Handle form submission
+  const handleSubmit = async () => {
+    try {
+      // Prepare the data to be sent to the server
+      const response = await fetch(`${apiUrl}/home/carousel/`, {
+        method: 'PATCH',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ images }), // Send the Base64 images array
+      });
+
+      if (!response.ok) {
+        throw new Error('Failed to update images');
+      }
+
+      const result = await response.json();
+      console.log('Updated Carousel Images:', result);
+      
+    } catch (error) {
+      console.error('Error updating images:', error);
+    }
+
     onClose(); // Close modal after saving
+    window.location.reload()
   };
 
   return (

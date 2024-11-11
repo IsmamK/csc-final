@@ -1,175 +1,283 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from "react";
+import { HexColorPicker } from "react-colorful";
 
 const Contact1Modal = ({ isOpen, onClose }) => {
-  // Prefill form with initial data
-  const [header, setHeader] = useState('Get In Touch');
-  const [subHeader, setSubHeader] = useState('Whether you have a concern or simply want to say hello, We are here to facilitate communication with you.');
-  const [buttonText, setButtonText] = useState('Contact Us');
-  const [emailLabel, setEmailLabel] = useState('Email Address');
-  const [phoneLabel, setPhoneLabel] = useState('Phone Number');
-  const [email, setEmail] = useState('pagedone@gmail.com');
-  const [phone, setPhone] = useState('470-601-1911');
-  const [locations, setLocations] = useState([
-    {
-      country: 'United Kingdom',
-      address: '123 High Street, Westminster, London',
-      imgSrc: 'https://pagedone.io/asset/uploads/1696246502.png',
-    },
-    {
-      country: 'Germany',
-      address: '101 Unter den Linden, Mitte District, Berlin',
-      imgSrc: 'https://pagedone.io/asset/uploads/1696246522.png',
-    },
-    {
-      country: 'France',
-      address: '456 Rue de la Paix, 8th Arrondissement, Paris',
-      imgSrc: 'https://pagedone.io/asset/uploads/1696246551.png',
-    },
-    {
-      country: 'Switzerland',
-      address: '987 Bahnhofstrasse, Zurich City Center, Zurich',
-      imgSrc: 'https://pagedone.io/asset/uploads/1696246565.png',
-    },
-  ]);
+  const apiUrl = import.meta.env.VITE_API_URL;
 
-  const handleLocationChange = (index, field, value) => {
-    const newLocations = [...locations];
-    newLocations[index][field] = value;
-    setLocations(newLocations);
+  const [formData, setFormData] = useState({
+    header: "",
+    subHeader: "",
+    buttonText: "",
+    buttonLink: "",
+    email: "",
+    phone: "",
+    bgColor: "",
+    textColor: "",
+    locations: [],
+  });
+
+  useEffect(() => {
+    // Fetch data from the API
+    fetch(`${apiUrl}/contact/contact1/`)
+      .then((res) => res.json())
+      .then((data) => {
+        console.log(data);
+        setFormData(data);
+      })
+      .catch((error) => console.error("Error fetching data:", error));
+  }, [apiUrl]);
+
+  const handleBgColorChange = (color) => {
+    setFormData((prevData) => ({
+      ...prevData,
+      bgColor: color,
+    }));
   };
 
-  const addLocation = () => {
-    setLocations([...locations, { country: '', address: '', imgSrc: '' }]);
+  const handleTextColorChange = (color) => {
+    setFormData((prevData) => ({
+      ...prevData,
+      textColor: color,
+    }));
+  };
+
+  const handleChange = (e) => {
+    const { name, value } = e.target;
+    setFormData((prevData) => ({
+      ...prevData,
+      [name]: value,
+    }));
+  };
+
+  const handleLocationChange = (index, field, value) => {
+    const updatedLocations = [...formData.locations];
+    updatedLocations[index][field] = value;
+    setFormData((prevData) => ({
+      ...prevData,
+      locations: updatedLocations,
+    }));
+  };
+
+  const handleAddLocation = () => {
+    setFormData((prevData) => ({
+      ...prevData,
+      locations: [
+        ...prevData.locations,
+        { country: "", address: "", imgSrc: "" },
+      ],
+    }));
+  };
+
+  const handleRemoveLocation = (index) => {
+    const updatedLocations = formData.locations.filter(
+      (_, locIndex) => locIndex !== index
+    );
+    setFormData((prevData) => ({
+      ...prevData,
+      locations: updatedLocations,
+    }));
+  };
+
+  const handleImageUpload = (index, file) => {
+    const reader = new FileReader();
+    reader.onload = () => {
+      const updatedLocations = [...formData.locations];
+      updatedLocations[index].imgSrc = reader.result;
+      setFormData((prevData) => ({
+        ...prevData,
+        locations: updatedLocations,
+      }));
+    };
+    reader.readAsDataURL(file);
   };
 
   const handleSubmit = (e) => {
     e.preventDefault();
 
-    // Structure the form data as desired
-    const data = {
-      header,
-      subHeader,
-      buttonText,
-      emailLabel,
-      phoneLabel,
-      email,
-      phone,
-      locations,
+    // Convert formData to the required format
+    const updatedFormData = {
+      ...formData,
+      locations: formData.locations.map((location) => ({
+        ...location,
+        imgSrc: location.imgSrc.split(",")[1] || location.imgSrc, // Strip base64 prefix if necessary
+      })),
     };
 
-    console.log(data); // Log data or send it to an API
-    onClose();
+    // Send PATCH request
+    fetch(`${apiUrl}/contact/contact1/`, {
+      method: "PATCH",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify(updatedFormData),
+    })
+      .then((res) => res.json())
+      .then((data) => {
+        console.log("Updated Data:", data);
+        onClose();
+        window.location.reload()
+      })
+      .catch((error) => console.error("Error updating data:", error));
   };
 
-  return (
-    <dialog id="contact1_modal" className={`modal ${isOpen ? 'modal-open' : ''}`}>
-      <div className="modal-box w-11/12 max-w-5xl relative">
-      <button onClick={onClose} className="btn btn-sm btn-circle absolute right-2 top-2">
-          ✕
-        </button>
-        <h3 className="font-bold text-lg mb-4">Contact Form</h3>
-        <form className="flex flex-col gap-4" onSubmit={handleSubmit}>
-          <label className="font-bold mb-1">Header:</label>
-          <input
-            type="text"
-            className="input border border-gray-300 rounded p-2"
-            value={header}
-            onChange={(e) => setHeader(e.target.value)}
-          />
-          <label className="font-bold mb-1">Subheader:</label>
-          <input
-            type="text"
-            className="input border border-gray-300 rounded p-2"
-            value={subHeader}
-            onChange={(e) => setSubHeader(e.target.value)}
-          />
-          <label className="font-bold mb-1">Button Text:</label>
-          <input
-            type="text"
-            className="input border border-gray-300 rounded p-2"
-            value={buttonText}
-            onChange={(e) => setButtonText(e.target.value)}
-          />
-          <label className="font-bold mb-1">Email Label:</label>
-          <input
-            type="text"
-            className="input border border-gray-300 rounded p-2"
-            value={emailLabel}
-            onChange={(e) => setEmailLabel(e.target.value)}
-          />
-          <label className="font-bold mb-1">Phone Label:</label>
-          <input
-            type="text"
-            className="input border border-gray-300 rounded p-2"
-            value={phoneLabel}
-            onChange={(e) => setPhoneLabel(e.target.value)}
-          />
-          <label className="font-bold mb-1">Email:</label>
-          <input
-            type="email"
-            className="input border border-gray-300 rounded p-2"
-            value={email}
-            onChange={(e) => setEmail(e.target.value)}
-          />
-          <label className="font-bold mb-1">Phone:</label>
-          <input
-            type="text"
-            className="input border border-gray-300 rounded p-2"
-            value={phone}
-            onChange={(e) => setPhone(e.target.value)}
-          />
+  if (!isOpen) return null;
 
-          <h4 className="font-bold mt-4">Locations:</h4>
-          <table className="table-auto w-full mb-4 border-collapse border border-gray-300">
-            <thead>
-              <tr>
-                <th className="border border-gray-300 p-2">Country</th>
-                <th className="border border-gray-300 p-2">Address</th>
-                <th className="border border-gray-300 p-2">Image Source</th>
-              </tr>
-            </thead>
-            <tbody>
-              {locations.map((location, index) => (
-                <tr key={index}>
-                  <td className="border border-gray-300 p-2">
-                    <input
-                      type="text"
-                      className="w-full p-1 border rounded"
-                      value={location.country}
-                      onChange={(e) => handleLocationChange(index, 'country', e.target.value)}
-                    />
-                  </td>
-                  <td className="border border-gray-300 p-2">
-                    <input
-                      type="text"
-                      className="w-full p-1 border rounded"
-                      value={location.address}
-                      onChange={(e) => handleLocationChange(index, 'address', e.target.value)}
-                    />
-                  </td>
-                  <td className="border border-gray-300 p-2">
-                    <input
-                      type="text"
-                      className="w-full p-1 border rounded"
-                      value={location.imgSrc}
-                      onChange={(e) => handleLocationChange(index, 'imgSrc', e.target.value)}
-                    />
-                  </td>
-                </tr>
-              ))}
-            </tbody>
-          </table>
-          <button type="button" className="btn mt-2" onClick={addLocation}>
+  return (
+    <div className="fixed inset-0 z-10 bg-black bg-opacity-50 flex items-center justify-center overflow-y-auto">
+      <div className="bg-white p-8 rounded shadow-lg max-w-xl w-full max-h-screen overflow-y-auto relative my-8 mx-4">
+        <h2 className="text-2xl mb-4">Edit Contact Information</h2>
+        <form onSubmit={handleSubmit}>
+          <div className="mb-4">
+            <label className="block font-bold">Header</label>
+            <input
+              type="text"
+              name="header"
+              value={formData.header}
+              onChange={handleChange}
+              className="border p-2 rounded-lg"
+            />
+          </div>
+          <div className="mb-4">
+            <label className="block font-bold">SubHeader</label>
+            <textarea
+              name="subHeader"
+              value={formData.subHeader}
+              onChange={handleChange}
+              className="border p-2 rounded-lg"
+            ></textarea>
+          </div>
+          <div className="mb-4">
+            <label className="block font-bold">Button Text</label>
+            <input
+              name="buttonText"
+              value={formData.buttonText}
+              onChange={handleChange}
+              className="border p-2 rounded-lg"
+            ></input>
+          </div>
+
+            <div className="mb-4">
+            <label className="block font-bold">Button Link</label>
+            <input
+              name="buttonLink"
+              value={formData.buttonLink}
+              onChange={handleChange}
+              className="border p-2 rounded-lg"
+            ></input>
+          </div>
+        
+          {/* Background and Text Color Pickers */}
+          <div className="mb-4">
+            <label className="block font-bold">Background Color</label>
+            <div className="hex flex items-center">
+              <HexColorPicker
+                color={formData.bgColor}
+                onChange={handleBgColorChange}
+                className="mr-4"
+              />
+              <input
+                type="text"
+                name="bgColor"
+                value={formData.bgColor}
+                onChange={handleChange}
+                className="border p-2 rounded-lg"
+              />
+            </div>
+          </div>
+          <div className="mb-4">
+            <label className="block font-bold">Text Color</label>
+            <div className="hex flex items-center">
+              <HexColorPicker
+                color={formData.textColor}
+                onChange={handleTextColorChange}
+                className="mr-4"
+              />
+              <input
+                type="text"
+                name="textColor"
+                value={formData.textColor}
+                onChange={handleChange}
+                className="border p-2 rounded-lg"
+              />
+            </div>
+          </div>
+          {/* Tabulated Locations */}
+          <h3 className="text-xl mb-2">Locations</h3>
+          {formData.locations.map((location, index) => (
+            <div key={index} className="mb-4 border p-4 rounded">
+              <div className="flex justify-between mb-2">
+                <h4 className="font-bold">Location {index + 1}</h4>
+                <button
+                  type="button"
+                  onClick={() => handleRemoveLocation(index)}
+                  className="text-red-500"
+                >
+                  Remove
+                </button>
+              </div>
+              <div className="mb-2">
+                <label className="block font-bold">Country</label>
+                <input
+                  type="text"
+                  value={location.country}
+                  onChange={(e) =>
+                    handleLocationChange(index, "country", e.target.value)
+                  }
+                  className="border p-2 rounded-lg"
+                />
+              </div>
+              <div className="mb-2">
+                <label className="block font-bold">Address</label>
+                <input
+                  type="text"
+                  value={location.address}
+                  onChange={(e) =>
+                    handleLocationChange(index, "address", e.target.value)
+                  }
+                  className="border p-2 rounded-lg"
+                />
+              </div>
+              <div className="mb-2">
+                <label className="block font-bold">Image Source</label>
+                <input
+                  type="file"
+                  accept="image/*"
+                  onChange={(e) => handleImageUpload(index, e.target.files[0])}
+                  className="border p-2 rounded-lg"
+                />
+                {location.imgSrc && (
+                  <img
+                    src={location.imgSrc}
+                    alt={`Location ${index + 1}`}
+                    className="mt-2 max-h-32 object-cover"
+                  />
+                )}
+              </div>
+            </div>
+          ))}
+          <button
+            type="button"
+            onClick={handleAddLocation}
+            className="bg-blue-500 text-white p-2 rounded mb-4"
+          >
             Add Location
           </button>
-
-          <button type="submit" className="btn mt-4">Submit</button>
+          {/* Save and Cancel Buttons */}
+          <div className="flex justify-end mt-4">
+            <button
+              type="button"
+              onClick={onClose}
+              className="bg-gray-300 p-2 rounded mr-2"
+            >
+              Cancel
+            </button>
+            <button type="submit" className="bg-blue-500 text-white p-2 rounded">
+              Save Changes
+            </button>
+          </div>
         </form>
-        <div className="modal-action mt-4">
-          <button className="btn" onClick={onClose}>Close</button>
-        </div>
       </div>
-    </dialog>
+    </div>
   );
 };
 

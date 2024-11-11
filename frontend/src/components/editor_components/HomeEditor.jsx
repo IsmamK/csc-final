@@ -28,7 +28,7 @@ const HomeEditor = ({ getDivider, availableShapes }) => {
   const [isFeaturedVideoOpen, setFeaturedVideoOpen] = useState(false);
 
   return (
-    <div className='flex gap-40 items-start justify-between p-20'>
+    <div className='flex gap-40 items-start justify-between p-20 w-[1300px]'>
       {/* Buttons Section */}
       <div className='grid grid-cols-2 gap-28 font-bold text-center'>
         <button className="btn btn-primary w-20 m-2" onClick={() => setCarouselOpen(true)}>Carousel</button>

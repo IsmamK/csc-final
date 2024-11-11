@@ -1,36 +1,68 @@
-import React, { useState } from 'react';
-import { HexColorPicker } from 'react-colorful'; // Ensure you have react-colorful installed for color picking
+import React, { useState,useEffect } from 'react';
+import { HexColorPicker } from 'react-colorful';
 
 const CardsModal = ({ isOpen, onClose }) => {
-  const [heroData, setHeroData] = useState({
-    divider: "", // Replace with your divider image
-    bgColor: "black", // Background color for the hero
-    textColor: "white", // Text color for the hero
-    heading: "What you need is what you get",
-    overlayColor: "rgba(0, 0, 0, 0.8)", // Default overlay color with fixed opacity
-    overlayTextColor: "white", // Default overlay text color
-    cards: [
-      {
-        imageSrc: 'pholder1.png', // Replace with actual image paths
-        title: 'Card 1',
-        additionalDetails: 'This is a detail about Card 1. This is way more involved and much more detail to help with everything and clearance.',
-      },
-      {
-        imageSrc: 'pholder2.png', // Replace with actual image paths
-        title: 'Card 2',
-        additionalDetails: 'This is a detail about Card 2. This is way more involved and much more detail to help with everything and clearance.',
-      },
-      {
-        imageSrc: 'pholder3.png', // Replace with actual image paths
-        title: 'Card 3',
-        additionalDetails: 'This is a detail about Card 3. This is way more involved and much more detail to help with everything and clearance.',
-      },
-    ]
-  });
+  const [data, setData] = useState({
+    divider: '',
+    bgColor: '',
+    textColor: '',
+    heading: '',
+    overlayColor: '',
+    overlayTextColor: '',
+    cards: []
+  }
+  );
+  const apiUrl = import.meta.env.VITE_API_URL;
 
-  // Handle input changes for cards
+  useEffect(() => {
+    // Mock JSON data
+    const fetchData = async () => {
+      try {
+        const response = await fetch(`${apiUrl}/home/cards`); // Replace with your API endpoint
+        const data = await response.json();
+        setData(data);
+      } catch (error) {
+        console.error("Error fetching hero data:", error);
+      }
+    };
+
+
+    // Simulating an API call
+    fetchData()
+  }, []);
+  
+  // Function to handle API submission
+  const handleSubmit = async () => {
+    try {
+      // Convert heroData to JSON string
+      const payload = JSON.stringify(heroData);
+
+      // Make the PATCH request
+      const response = await fetch(`${apiUrl}/home/cards/`, {
+        method: 'PATCH',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: payload,
+      });
+
+      if (response.ok) {
+        console.log('Updated Hero Data successfully!');
+        onClose(); // Close modal after saving
+      } else {
+        console.error('Failed to update Hero Data');
+      }
+    } catch (error) {
+      console.error('Error:', error);
+    }
+  };
+
+
+
+
+  // Function to handle card changes
   const handleCardChange = (index, field, value) => {
-    const newCards = [...heroData.cards];
+    const newCards = [...data.cards];
     newCards[index][field] = value;
     setHeroData((prevData) => ({
       ...prevData,
@@ -38,7 +70,7 @@ const CardsModal = ({ isOpen, onClose }) => {
     }));
   };
 
-  // Handle image upload
+  // Function to handle image upload and convert to base64
   const handleImageUpload = (index, event) => {
     const file = event.target.files[0];
     if (file) {
@@ -50,192 +82,102 @@ const CardsModal = ({ isOpen, onClose }) => {
     }
   };
 
-  // Add a new card
+  // Function to add a new card
   const addCard = () => {
     setHeroData((prevData) => ({
       ...prevData,
       cards: [
         ...prevData.cards,
-        {
-          imageSrc: '', // Default empty
-          title: '',
-          additionalDetails: '',
-        },
+        { imageSrc: '', title: '', additionalDetails: '' },
       ],
     }));
   };
 
-  // Handle form submission
-  const handleSubmit = () => {
-    console.log('Updated Hero Data:', heroData);
-    onClose(); // Close modal after saving
-  };
-
-  // Calculate overlay color with fixed opacity
-  const overlayColorWithOpacity = (color) => {
-    const rgba = color.match(/rgba?\((\d+),\s*(\d+),\s*(\d+)(?:,\s*[\d\.]+)?\)/);
-    if (rgba) {
-      return `rgba(${rgba[1]}, ${rgba[2]}, ${rgba[3]}, 0.8)`;
-    }
-    return color; // Return original color if not a valid rgba
+  // Function to remove a card
+  const removeCard = (index) => {
+    setHeroData((prevData) => ({
+      ...prevData,
+      cards: prevData.cards.filter((_, i) => i !== index),
+    }));
   };
 
   return (
     <dialog className={`modal ${isOpen ? 'modal-open' : ''}`}>
-      <div className="modal-box w-11/12 max-w-2xl relative">
+      <div className="modal-box w-11/12 max-w-4xl relative">
         <button onClick={onClose} className="btn btn-sm btn-circle absolute right-2 top-2">✕</button>
 
-        <h3 className="font-bold text-lg mb-4">Edit Cards Section</h3>
+        <h3 className="font-bold text-lg mb-6">Edit Cards Section</h3>
 
-        <div className="mb-4">
-          <label className="block mb-1">Heading:</label>
+        <div className="mb-6">
+          <label className="block text-sm font-medium mb-1">Heading:</label>
           <input
             type="text"
-            value={heroData.heading}
+            value={data.heading}
             onChange={(e) => setHeroData({ ...heroData, heading: e.target.value })}
-            className="input input-bordered w-full mb-2"
+            className="input input-bordered w-full mb-4"
           />
         </div>
 
-        {/* Background Color Picker */}
-        <div className="mb-4">
-          <label className="block mb-1">Background Color:</label>
-          <div className="flex items-center hex">
-            <HexColorPicker
-              color={heroData.bgColor}
-              onChange={(color) => setHeroData((prevData) => ({ ...prevData, bgColor: color }))}
-              className="w-20 h-20" // Adjusted size
-            />
-            <input
-              type="text"
-              value={heroData.bgColor}
-              onChange={(e) => setHeroData((prevData) => ({ ...prevData, bgColor: e.target.value }))}
-              className="input input-bordered w-24 ml-2" // Adjusted size
-              placeholder="#000000"
-            />
-          </div>
-        </div>
-
-        {/* Main Text Color Picker */}
-        <div className="mb-4">
-          <label className="block mb-1">Text Color:</label>
-          <div className="flex items-center hex">
-            <HexColorPicker
-              color={heroData.textColor}
-              onChange={(color) => setHeroData((prevData) => ({ ...prevData, textColor: color }))}
-              className="w-20 h-20" // Adjusted size
-            />
-            <input
-              type="text"
-              value={heroData.textColor}
-              onChange={(e) => setHeroData((prevData) => ({ ...prevData, textColor: e.target.value }))}
-              className="input input-bordered w-24 ml-2" // Adjusted size
-              placeholder="#FFFFFF"
-            />
-          </div>
-        </div>
-
-        {/* Overlay Color Picker */}
-        <div className="mb-4">
-          <label className="block mb-1">Overlay Color:</label>
-          <div className="flex items-center hex">
-            <HexColorPicker
-              color={heroData.overlayColor}
-              onChange={(color) => setHeroData((prevData) => ({
-                ...prevData,
-                overlayColor: overlayColorWithOpacity(color) // Update with fixed opacity
-              }))}
-              className="w-20 h-20" // Adjusted size
-            />
-            <input
-              type="text"
-              value={heroData.overlayColor}
-              onChange={(e) => setHeroData((prevData) => ({
-                ...prevData,
-                overlayColor: overlayColorWithOpacity(e.target.value) // Ensure valid RGBA
-              }))}
-              className="input input-bordered w-24 ml-2" // Adjusted size
-              placeholder="rgba(0, 0, 0, 0.8)"
-            />
-            <div
-              className="w-24 h-10 ml-2"
-              style={{ backgroundColor: overlayColorWithOpacity(heroData.overlayColor) }}
-            ></div>
-          </div>
-        </div>
-
-        {/* Overlay Text Color Picker */}
-        <div className="mb-4">
-          <label className="block mb-1">Overlay Text Color:</label>
-          <div className="flex items-center hex">
-            <HexColorPicker
-              color={heroData.overlayTextColor}
-              onChange={(color) => setHeroData((prevData) => ({ ...prevData, overlayTextColor: color }))}
-              className="w-20 h-20" // Adjusted size
-            />
-            <input
-              type="text"
-              value={heroData.overlayTextColor}
-              onChange={(e) => setHeroData((prevData) => ({ ...prevData, overlayTextColor: e.target.value }))}
-              className="input input-bordered w-24 ml-2" // Adjusted size
-              placeholder="#FFFFFF"
-            />
-          </div>
-        </div>
-
         {/* Cards Table */}
-        <table className="table w-full">
-          <thead>
-            <tr>
-              <th>Image</th>
-              <th>Title</th>
-              <th>Details</th>
-              <th>Actions</th>
-            </tr>
-          </thead>
-          <tbody>
-            {heroData.cards.map((card, index) => (
-              <tr key={index}>
-                <td>
-                  <input
-                    type="file"
-                    accept="image/*"
-                    onChange={(e) => handleImageUpload(index, e)}
-                    className="input input-bordered w-full"
-                  />
-                  {card.imageSrc && (
-                    <img src={card.imageSrc} alt="Card" className="mt-2 w-24 h-24 object-cover" />
-                  )}
-                </td>
-                <td>
-                  <input
-                    type="text"
-                    value={card.title}
-                    onChange={(e) => handleCardChange(index, 'title', e.target.value)}
-                    className="input input-bordered w-full"
-                    placeholder="Enter card title"
-                  />
-                </td>
-                <td>
-                  <textarea
-                    value={card.additionalDetails}
-                    onChange={(e) => handleCardChange(index, 'additionalDetails', e.target.value)}
-                    className="textarea textarea-bordered w-full"
-                    rows={2}
-                    placeholder="Enter additional details"
-                  />
-                </td>
-                <td>
-                  <button className="btn btn-error" onClick={() => handleCardChange(index)}>Remove</button>
-                </td>
+        <div className="overflow-x-auto">
+          <table className="table-auto w-full text-left border-collapse">
+            <thead>
+              <tr className="bg-gray-200">
+                <th className="p-3 border-b-2">Image</th>
+                <th className="p-3 border-b-2">Title</th>
+                <th className="p-3 border-b-2">Details</th>
+                <th className="p-3 border-b-2">Actions</th>
               </tr>
-            ))}
-          </tbody>
-        </table>
-        <button className="btn btn-primary mt-4" onClick={addCard}>Add Card</button>
+            </thead>
+            <tbody>
+              {data.cards.map((card, index) => (
+                <tr key={index} className="hover:bg-gray-100">
+                  <td className="p-3 border-b">
+                    <input
+                      type="file"
+                      accept="image/*"
+                      onChange={(e) => handleImageUpload(index, e)}
+                      className="input input-bordered w-full"
+                    />
+                    {card.imageSrc && (
+                      <img
+                        src={card.imageSrc}
+                        alt="Card"
+                        className="mt-2 w-24 h-24 object-cover rounded-md"
+                      />
+                    )}
+                  </td>
+                  <td className="p-3 border-b">
+                    <input
+                      type="text"
+                      value={card.title}
+                      onChange={(e) => handleCardChange(index, 'title', e.target.value)}
+                      className="input input-bordered w-full"
+                      placeholder="Enter card title"
+                    />
+                  </td>
+                  <td className="p-3 border-b">
+                    <textarea
+                      value={card.additionalDetails}
+                      onChange={(e) => handleCardChange(index, 'additionalDetails', e.target.value)}
+                      className="textarea textarea-bordered w-full"
+                      rows={3}
+                      placeholder="Enter additional details"
+                    />
+                  </td>
+                  <td className="p-3 border-b text-center">
+                    <button className="btn btn-error btn-sm" onClick={() => removeCard(index)}>Remove</button>
+                  </td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        </div>
+
+        <button className="btn btn-primary mt-6" onClick={addCard}>Add Card</button>
 
         <div className="modal-action">
-          <button className="btn" onClick={handleSubmit}>Save Changes</button>
+          <button className="btn btn-success" onClick={handleSubmit}>Save Changes</button>
         </div>
       </div>
     </dialog>

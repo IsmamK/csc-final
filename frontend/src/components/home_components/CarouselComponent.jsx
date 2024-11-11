@@ -1,16 +1,27 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import { Carousel } from "flowbite-react";
 
 const CarouselComponent = () => {
-  // Array of image URLs
-  const images = [
-    "https://flowbite.com/docs/images/carousel/carousel-1.svg",
-    "https://flowbite.com/docs/images/carousel/carousel-2.svg",
-    "https://flowbite.com/docs/images/carousel/carousel-3.svg",
-    "https://flowbite.com/docs/images/carousel/carousel-4.svg",
-    "https://flowbite.com/docs/images/carousel/carousel-5.svg",
-    
-  ];
+  const apiUrl = import.meta.env.VITE_API_URL;
+  const [images, setImages] = useState([]);
+
+  useEffect(() => {
+    // Fetch the data from the API
+    const fetchImages = async () => {
+      try {
+        const response = await fetch(`${apiUrl}/home/carousel`);
+        if (!response.ok) {
+          throw new Error('Failed to fetch images');
+        }
+        const data = await response.json();
+        setImages(data); // Update the images state
+      } catch (error) {
+        console.error('Error fetching images:', error);
+      }
+    };
+
+    fetchImages();
+  }, [apiUrl]);
 
   return (
     <div className="h-80 lg:h-[700px]">

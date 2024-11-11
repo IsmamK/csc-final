@@ -1,79 +1,57 @@
-import React from 'react';
-import { FaHandshake, FaThumbsUp, FaLightbulb, FaDollarSign, FaHeadset } from 'react-icons/fa'; // Importing icons
+import React, { useEffect, useState } from 'react';
+import axios from 'axios';
 
 const WhyUs = () => {
-  const options = {
-    divider: "path_to_divider_image.png", // Set your image path
-    title: "Why Choose Us?",
-    reasons: [
-      {
-        icon: <FaHandshake className="text-4xl" />,
-        title: "Trusted Expertise",
-        description: "Years of industry expertise ensuring success in every project we undertake.",
-        bgColor: "#4A5568", // Background color for this reason
-        textColor: "#fff" // Text color for this reason
-      },
-      {
-        icon: <FaThumbsUp className="text-4xl" />,
-        title: "Customer First",
-        description: "Our customers are our priority. We guarantee satisfaction at every step.",
-        bgColor: "#2B6CB0", // Background color for this reason
-        textColor: "#fff" // Text color for this reason
-      },
-      {
-        icon: <FaLightbulb className="text-4xl" />,
-        title: "Innovative Solutions",
-        description: "We offer modern and innovative solutions that keep your business ahead.",
-        bgColor: "#38A169", // Background color for this reason
-        textColor: "#fff" // Text color for this reason
-      },
-      {
-        icon: <FaDollarSign className="text-4xl" />,
-        title: "Cost Effective",
-        description: "Get the best value for your investment without compromising on quality.",
-        bgColor: "#D53F8C", // Background color for this reason
-        textColor: "#fff" // Text color for this reason
-      },
-      {
-        icon: <FaHeadset className="text-4xl" />,
-        title: "24/7 Support",
-        description: "We provide round-the-clock support to ensure all your needs are met.",
-        bgColor: "#ED8936", // Background color for this reason
-        textColor: "#fff" // Text color for this reason
-      }
-    ],
-    bgColor: "#1a202c", // Main container background color
-    textColor: "#fff" // Main container text color
-  };
+  const [whyUsData, setWhyUsData] = useState(null);
+  const apiUrl = import.meta.env.VITE_API_URL;
+
+  useEffect(() => {
+    // Fetch data from the API
+    axios.get(`${apiUrl}/home/why-us`)
+      .then(response => {
+        setWhyUsData(response.data); // Assume response.data has the necessary structure
+      })
+      .catch(error => {
+        console.error("Error fetching Why Us data:", error);
+      });
+  }, []);
+
+  // Early return if data hasn't loaded yet
+  if (!whyUsData) {
+    return <p>Loading...</p>;
+  }
+
+  const { title, subtitle, bgColor, textColor, divider, features } = whyUsData;
 
   return (
-    <div className="relative py-16"
-      style={{ backgroundColor: options.bgColor, color: options.textColor }} // Fallback colors
+    <div
+      className="relative py-16"
+      style={{ backgroundColor: bgColor, color: textColor }}
     >
-      <img src={options.divider || ""} className='absolute top-0 z-100 over' alt="" />
+      {divider && <img src={divider} className="absolute top-0 w-full" alt="" />}
 
-      <h2 className="text-5xl font-extrabold text-center mb-12 tracking-wide mt-20 md:mt-40">
-        {options.title}
-      </h2>
-
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-12 px-8 md:px-16 lg:px-24">
-        {options.reasons.map((reason, index) => (
-          <div 
-            key={index} 
-            className="backdrop-blur-lg p-8 rounded-xl shadow-2xl transform transition hover:scale-105 duration-300 ease-in-out text-center"
-            style={{
-              backgroundColor: reason.bgColor || '#4A5568', // Fallback color
-              color: reason.textColor || '#fff' // Fallback color
-            }}
-          >
-            <div className="mb-4">{reason.icon}</div>
-            <h3 className="text-2xl font-semibold mb-2">{reason.title}</h3>
-            <p className="text-opacity-80">{reason.description}</p>
+      <div className="py-6 sm:py-8 lg:py-12">
+        <div className="mx-auto max-w-screen-2xl px-4 md:px-8">
+          {/* Section title and subtitle */}
+          <div className="mb-10 md:mb-16">
+            <h2 className="mb-4 text-center text-4xl font-bold md:mb-6 lg:text-7xl">{title}</h2>
+            <p className="mx-auto max-w-screen-md text-center md:text-lg">{subtitle}</p>
           </div>
-        ))}
-      </div>
 
-      <div className="absolute inset-0 opacity-80 pointer-events-none"></div>
+          {/* Features grid */}
+          <div className="grid gap-12 sm:grid-cols-2 xl:grid-cols-3 xl:gap-16">
+            {features.map((feature, index) => (
+              <div key={index} className="flex flex-col items-center">
+                <div className="mb-2 flex h-12 w-12 items-center justify-center sm:mb-4 md:h-14 md:w-14">
+                  <img src={feature.iconUrl} alt={`${feature.title} icon`} className="h-full w-full object-contain" />
+                </div>
+                <h3 className="mb-2 text-center text-lg font-semibold md:text-xl">{feature.title}</h3>
+                <p className="mb-2 text-center">{feature.description}</p>
+              </div>
+            ))}
+          </div>
+        </div>
+      </div>
     </div>
   );
 };

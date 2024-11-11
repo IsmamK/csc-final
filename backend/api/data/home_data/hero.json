@@ -1,0 +1,16 @@
+{
+    "bgColor": "#ffffff",
+    "textColor": "#000000",
+    "title": "Welcome to Bracu Robo Club",
+    "description": "Lorem ipsum, dolor sit amet consectetur adipisicing elit. Obcaecati eum culpa nihil perferendis consectetur voluptas eaque cum odio numquam consequuntur.",
+    "divider": "http://example.com/divider-image.png",
+    "image1": null,
+    "image2": null,
+    "altText1": "Hero Image 1",
+    "altText2": "Hero Image 2",
+    "contactLink": "#",
+    "contactText": "Contact Us",
+    "ctaLink": "#",
+    "ctaText": "Call to Action",
+    "buttonText": "Call to Action"
+}

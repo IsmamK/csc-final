@@ -1,150 +1,220 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { HexColorPicker } from 'react-colorful';
+import axios from 'axios';
 
 const WhyUsModal = ({ isOpen, onClose }) => {
-  // Hardcoded data
-  const initialReasons = [
-    {
-      icon: '⭐',
-      title: 'Quality Service',
-      description: 'We provide top-notch service to our customers.',
-      bgColor: '#f0f8ff',
-      textColor: '#000000',
-    },
-    {
-      icon: '🌟',
-      title: 'Affordable Prices',
-      description: 'Our prices are competitive and fair.',
-      bgColor: '#fff5ee',
-      textColor: '#000000',
-    },
-    {
-      icon: '🏆',
-      title: 'Expert Team',
-      description: 'Our team consists of industry experts.',
-      bgColor: '#ffe4e1',
-      textColor: '#000000',
-    },
-  ];
+  const apiUrl = import.meta.env.VITE_API_URL;
 
-  const [reasons, setReasons] = useState(initialReasons);
+  const [data, setData] = useState(null); // Set initial data as null for conditional rendering
+  const [loading, setLoading] = useState(false); // Loading state for both fetching and saving data
+  const [error, setError] = useState(null); // Error state
 
-  const handleInputChange = (index, field, value) => {
-    const newReasons = [...reasons];
-    newReasons[index][field] = value;
-    setReasons(newReasons);
+  useEffect(() => {
+    const fetchData = async () => {
+      setLoading(true);
+      try {
+        const response = await axios.get(`${apiUrl}/home/why-us/`);
+        setData(response.data);
+      } catch (error) {
+        console.error("Error fetching data:", error);
+        setError("Failed to load data. Please try again.");
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    if (isOpen) {
+      fetchData();
+    }
+  }, [isOpen]);
+
+  const handleInputChange = (field, value) => {
+    setData({ ...data, [field]: value });
   };
 
-  const removeReason = (index) => {
-    const newReasons = reasons.filter((_, i) => i !== index);
-    setReasons(newReasons);
+  const handleFeatureChange = (index, field, value) => {
+    const newFeatures = [...data.features];
+    newFeatures[index][field] = value;
+    setData({ ...data, features: newFeatures });
   };
 
-  const addNewReason = () => {
-    const newReason = {
-      icon: '',
+  const addNewFeature = () => {
+    const newFeature = {
+      iconUrl: '',
       title: '',
       description: '',
-      bgColor: '#ffffff',
-      textColor: '#000000',
     };
-    setReasons([...reasons, newReason]);
+    setData({ ...data, features: [...data.features, newFeature] });
   };
 
-  const handleSubmit = () => {
-    // Handle form submission logic here
-    console.log(reasons);
+  const removeFeature = (index) => {
+    const newFeatures = data.features.filter((_, i) => i !== index);
+    setData({ ...data, features: newFeatures });
   };
+
+  // Convert image to base64
+  const handleIconUpload = (index, event) => {
+    const file = event.target.files[0];
+    if (file) {
+      const reader = new FileReader();
+      reader.onloadend = () => {
+        const base64 = reader.result;
+        handleFeatureChange(index, 'iconUrl', base64);
+      };
+      reader.readAsDataURL(file);
+    }
+  };
+
+  const handleSubmit = async () => {
+    if (!data.title || !data.subtitle || !data.features.every(f => f.title && f.description)) {
+      alert("Please fill all the required fields.");
+      return;
+    }
+
+    setLoading(true);
+    setError(null);
+
+    try {
+      await axios.patch(`${apiUrl}/home/why-us/`, data);
+      console.log('Data successfully updated');
+      onClose();
+    } catch (error) {
+      console.error('Error updating data:', error);
+      setError("Error updating the data. Please try again.");
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  if (loading && !data) {
+    return <p>Loading...</p>; // Show loading only if data is null (initial fetch)
+  }
 
   return (
     <dialog className={`modal ${isOpen ? 'modal-open' : ''}`}>
       <div className="modal-box w-full max-w-5xl relative">
         <button onClick={onClose} className="btn btn-sm btn-circle absolute right-2 top-2">✕</button>
 
-        <h3 className="font-bold text-lg mb-2">Why Choose Us?</h3>
+        <h3 className="font-bold text-lg mb-2">Why Choose Us Configuration</h3>
 
-        <table className="table-auto w-full border border-gray-300 overflow-auto">
-          <thead>
-            <tr className="bg-gray-100">
-              <th className="px-2 py-2 border">Icon</th>
-              <th className="px-2 py-2 border w-1/4">Title</th>
-              <th className="px-2 py-2 border">Description</th>
-              <th className="px-2 py-2 border">Background Color</th>
-              <th className="px-2 py-2 border">Text Color</th>
-              <th className="px-2 py-2 border">Actions</th>
-            </tr>
-          </thead>
-          <tbody>
-            {reasons.map((reason, index) => (
-              <tr key={index} className="border-t">
-                <td className="px-2 py-2 border text-center">{reason.icon}</td>
-                <td className="px-2 py-2 border">
-                  <input
-                    type="text"
-                    value={reason.title}
-                    onChange={(e) => handleInputChange(index, 'title', e.target.value)}
-                    className="input input-bordered w-full"
-                    placeholder="Title"
-                  />
-                </td>
-                <td className="px-2 py-2 border">
-                  <input
-                    type="text"
-                    value={reason.description}
-                    onChange={(e) => handleInputChange(index, 'description', e.target.value)}
-                    className="input input-bordered w-full"
-                    placeholder="Description"
-                  />
-                </td>
-                <td className="px-2 py-2 border">
-                  <div className="flex items-center">
-                    <HexColorPicker
-                      color={reason.bgColor}
-                      onChange={(color) => handleInputChange(index, 'bgColor', color)}
-                      className="w-12 h-12"
-                    />
-                    <input
-                      type="text"
-                      value={reason.bgColor}
-                      onChange={(e) => handleInputChange(index, 'bgColor', e.target.value)}
-                      className="input input-bordered w-20 ml-2"
-                      placeholder="#ffffff"
-                    />
-                  </div>
-                </td>
-                <td className="px-2 py-2 border">
-                  <div className="flex items-center">
-                    <HexColorPicker
-                      color={reason.textColor}
-                      onChange={(color) => handleInputChange(index, 'textColor', color)}
-                      className="w-12 h-12"
-                    />
-                    <input
-                      type="text"
-                      value={reason.textColor}
-                      onChange={(e) => handleInputChange(index, 'textColor', e.target.value)}
-                      className="input input-bordered w-20 ml-2"
-                      placeholder="#000000"
-                    />
-                  </div>
-                </td>
-                <td className="px-2 py-2 border text-center">
-                  <button
-                    onClick={() => removeReason(index)}
-                    className="btn btn-sm btn-error"
-                  >
-                    Remove
-                  </button>
-                </td>
-              </tr>
-            ))}
-          </tbody>
-        </table>
+        {data ? (
+          <>
+            <div className="mb-4">
+              <input
+                type="text"
+                value={data.title}
+                onChange={(e) => handleInputChange('title', e.target.value)}
+                className="input input-bordered w-full"
+                placeholder="Section Title"
+              />
+              <input
+                type="text"
+                value={data.subtitle}
+                onChange={(e) => handleInputChange('subtitle', e.target.value)}
+                className="input input-bordered w-full mt-2"
+                placeholder="Subtitle"
+              />
+            </div>
 
-        <div className="flex justify-between mt-4">
-          <button className="btn btn-primary" onClick={addNewReason}>Add New Reason</button>
-          <button className="btn btn-success" onClick={handleSubmit}>Save Changes</button>
-        </div>
+            <div className="flex mb-4">
+              <div className="mr-4">
+                <label>Background Color</label>
+                <HexColorPicker
+                  color={data.bgColor}
+                  onChange={(color) => handleInputChange('bgColor', color)}
+                />
+                <input
+                  type="text"
+                  value={data.bgColor}
+                  onChange={(e) => handleInputChange('bgColor', e.target.value)}
+                  className="input input-bordered mt-2 w-full"
+                  placeholder="#000000"
+                />
+              </div>
+              <div>
+                <label>Text Color</label>
+                <HexColorPicker
+                  color={data.textColor}
+                  onChange={(color) => handleInputChange('textColor', color)}
+                />
+                <input
+                  type="text"
+                  value={data.textColor}
+                  onChange={(e) => handleInputChange('textColor', e.target.value)}
+                  className="input input-bordered mt-2 w-full"
+                  placeholder="#ffffff"
+                />
+              </div>
+            </div>
+
+            <input
+              type="text"
+              value={data.divider}
+              onChange={(e) => handleInputChange('divider', e.target.value)}
+              className="input input-bordered w-full mb-4"
+              placeholder="Divider Image URL"
+            />
+
+            <table className="table-auto w-full border border-gray-300">
+              <thead>
+                <tr className="bg-gray-100">
+                  <th className="px-2 py-2 border">Icon Upload</th>
+                  <th className="px-2 py-2 border">Title</th>
+                  <th className="px-2 py-2 border">Description</th>
+                  <th className="px-2 py-2 border">Actions</th>
+                </tr>
+              </thead>
+              <tbody>
+                {data.features.map((feature, index) => (
+                  <tr key={index} className="border-t">
+                    <td className="px-2 py-2 border">
+                      <input
+                        type="file"
+                        onChange={(e) => handleIconUpload(index, e)}
+                        className="input input-bordered w-full"
+                      />
+                    </td>
+                    <td className="px-2 py-2 border">
+                      <input
+                        type="text"
+                        value={feature.title}
+                        onChange={(e) => handleFeatureChange(index, 'title', e.target.value)}
+                        className="input input-bordered w-full"
+                        placeholder="Feature Title"
+                      />
+                    </td>
+                    <td className="px-2 py-2 border">
+                      <input
+                        type="text"
+                        value={feature.description}
+                        onChange={(e) => handleFeatureChange(index, 'description', e.target.value)}
+                        className="input input-bordered w-full"
+                        placeholder="Feature Description"
+                      />
+                    </td>
+                    <td className="px-2 py-2 border text-center">
+                      <button
+                        onClick={() => removeFeature(index)}
+                        className="btn btn-sm btn-error"
+                      >
+                        Remove
+                      </button>
+                    </td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+
+            <div className="flex justify-between mt-4">
+              <button className="btn btn-primary" onClick={addNewFeature}>Add New Feature</button>
+              <button className="btn btn-success" onClick={handleSubmit} disabled={loading}>
+                {loading ? 'Saving...' : 'Save Changes'}
+              </button>
+            </div>
+          </>
+        ) : (
+          <p className="text-red-500 mt-2">{error}</p>
+        )}
       </div>
     </dialog>
   );

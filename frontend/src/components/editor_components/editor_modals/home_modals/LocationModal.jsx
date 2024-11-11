@@ -1,20 +1,27 @@
-import React, { useState } from 'react';
+import React, { useState,useEffect} from 'react';
 import { HexColorPicker } from 'react-colorful';
 
 const LocationModal = ({ isOpen, onClose }) => {
-  const initialData = {
-    title: "Our Location",
-    description: "We are located at the heart of the city, making it easy to reach us from anywhere. Feel free to stop by our office for any inquiries, or simply to say hello!",
-    address: "1234 Street Name, City, Country",
-    phone: "+1 (234) 567-8901",
-    email: "contact@company.com",
-    workingHours: "Mon - Fri, 9 AM - 5 PM",
-    mapSrc: "https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3650.7266501527824!2d90.4051615759951!3d23.792746387148036!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x3755c7617fda4ea1%3A0xe097ea5c0a771a32!2sStech%20Group!5e0!3m2!1sen!2sbd!4v1730331846729!5m2!1sen!2sbd",
-    bgColor: "#f8f9fa", // Default background color
-    textColor: "#212529", // Default text color
-  };
+  const apiUrl = import.meta.env.VITE_API_URL;
 
-  const [data, setData] = useState(initialData);
+
+  const [data, setData] = useState({
+    title: "",
+    description: "",
+    address: "",
+    phone: "",
+    email: "",
+    workingHours: "",
+    mapSrc: "",
+    bgColor: "", // Default background color
+    textColor: "", // Default text color
+  });
+
+  useEffect(()=>{
+    fetch(`${apiUrl}/home/location/`)
+    .then(res=>res.json())
+    .then(data=>setData(data))
+  },[])
 
   const handleInputChange = (field, value) => {
     setData({ ...data, [field]: value });
@@ -24,10 +31,25 @@ const LocationModal = ({ isOpen, onClose }) => {
     setData({ ...data, [colorField]: value });
   };
 
-  const handleSubmit = () => {
-    console.log(data);
-  };
-
+  const handleSubmit = async () => {
+    try {
+      const response = await fetch(`${apiUrl}/home/location/`, {
+        method: 'PATCH',
+        headers: {
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify(data)
+      });
+      if (response.ok) {
+        alert('Location section updated successfully!');
+      } else {
+        alert('Failed to update location section.');
+      }
+    } catch (error) {
+      console.error('Error updating location section:', error);
+      alert('Error updating location section.');
+    }
+  }
   return (
     <dialog className={`modal ${isOpen ? 'modal-open' : ''}`}>
       <div className="modal-box w-full max-w-lg relative">
@@ -43,6 +65,17 @@ const LocationModal = ({ isOpen, onClose }) => {
             onChange={(e) => handleInputChange('title', e.target.value)}
             className="input input-bordered w-full"
             placeholder="Title"
+          />
+        </div>
+
+        <div className="mb-4">
+          <label className="block mb-1">Subtitle</label>
+          <input
+            type="text"
+            value={data.subtitle}
+            onChange={(e) => handleInputChange('subtitle', e.target.value)}
+            className="input input-bordered w-full"
+            placeholder="Subtitle"
           />
         </div>
 

@@ -2,6 +2,8 @@ import React, { useState } from 'react';
 import { HexColorPicker } from 'react-colorful';
 
 const OurClientsModal = ({ isOpen, onClose }) => {
+  const apiUrl = import.meta.env.VITE_API_URL; // API URL
+
   // Initial state based on the provided JSON
   const initialData = {
     title: "Our Clients",
@@ -52,9 +54,10 @@ const OurClientsModal = ({ isOpen, onClose }) => {
     if (file) {
       const reader = new FileReader();
       reader.onloadend = () => {
+        // Directly set the base64 encoded image
         handleClientChange(index, 'logo', reader.result);
       };
-      reader.readAsDataURL(file);
+      reader.readAsDataURL(file); // Convert the image to base64
     }
   };
 
@@ -71,9 +74,37 @@ const OurClientsModal = ({ isOpen, onClose }) => {
     setData({ ...data, clients: [...data.clients, newClient] });
   };
 
-  const handleSubmit = () => {
-    // Handle form submission logic here
-    console.log(data);
+  const handleSubmit = async () => {
+    // Create the payload with the data to be sent to the API
+    const payload = {
+      title: data.title,
+      bgColor: data.bgColor,
+      textColor: data.textColor,
+      clients: data.clients.map(client => ({
+        logo: client.logo, // Base64 encoded image
+        link: client.link
+      }))
+    };
+
+    try {
+      // Send the request to the API
+      const response = await fetch(`${apiUrl}/home/our-clients/`, {
+        method: 'PATCH',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(payload)
+      });
+
+      if (response.ok) {
+        console.log('Data saved successfully');
+        onClose(); // Close the modal after successful submission
+      } else {
+        console.error('Error saving data');
+      }
+    } catch (error) {
+      console.error('Network error', error);
+    }
   };
 
   return (

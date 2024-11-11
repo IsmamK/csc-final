@@ -1,63 +1,58 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
+import Slider from 'react-infinite-logo-slider';
+import axios from 'axios';
 
 const OurClients = () => {
-  const data = {
-    title: "Our Clients",
-    bgColor: "white", // Background color
-    textColor: "#000",   // Text color
-    divider: "path_to_divider_image.png", // Add your divider image path here
-    clients: [
-      {
-        logo: "https://upload.wikimedia.org/wikipedia/commons/thumb/2/24/Samsung_Logo.svg/2560px-Samsung_Logo.svg.png",
-        link: "https://www.samsung.com"
-      },
-      {
-        logo: "https://i.pinimg.com/originals/77/cd/5a/77cd5aef056d75c2c9e17c581681ed0c.png",
-        link: "https://www.example.com/client2"
-      },
-      {
-        logo: "https://e7.pngegg.com/pngimages/144/206/png-clipart-unilever-pureit-pure-it-logo-icons-logos-emojis-product-logos.png",
-        link: "https://www.example.com/client3"
-      },
-      {
-        logo: "https://logos-world.net/wp-content/uploads/2020/11/Hewlett-Packard-Logo-2008-2014.png",
-        link: "https://www.hp.com"
-      },
-      {
-        logo: "https://i.pinimg.com/originals/6f/14/e1/6f14e17403cf65d3d5adeef024e85c1f.png",
-        link: "https://www.example.com/client5"
-      },
-      {
-        logo: "https://seeklogo.com/images/P/pran-logo-17F049097A-seeklogo.com.png",
-        link: "https://www.example.com/client6"
-      },
-    ]
-  };
+  const [clientsData, setClientsData] = useState(null);
+  const apiUrl = import.meta.env.VITE_API_URL;
+
+  // Fetching data from API
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        const response = await axios.get(`${apiUrl}/home/our-clients`);
+        setClientsData(response.data); // Assuming the response data matches the expected format
+      } catch (error) {
+        console.error('Error fetching clients data:', error);
+      }
+    };
+
+    fetchData();
+  }, [apiUrl]);
+
+  // If the data is still loading, return a loading state
+  if (!clientsData) {
+    return <div>Loading...</div>;
+  }
 
   return (
-    <div className="relative" style={{ backgroundColor: data.bgColor, color: data.textColor }}>
+    <div className="relative" style={{ backgroundColor: clientsData.bgColor, color: clientsData.textColor }}>
       {/* Divider Image */}
-      {data.divider && <img src={data.divider} alt="" className="absolute top-0 z-100" />}
+      {clientsData.divider && <img src={clientsData.divider} alt="Divider" className="absolute top-0 z-100" />}
       
-      <div className="overflow-hidden py-40">
+      <div className="overflow-hidden py-20">
         <div className="flex items-center justify-center">
-          <h2 className="text-7xl font-bold mb-6 mt-10">{data.title}</h2>
+          <h2 className="text-7xl font-bold mb-6 mt-10">{clientsData.title}</h2>
         </div>
 
         {/* Logo Slider Container */}
-        <div className="w-10/12 mx-auto relative flex overflow-x-hidden mt-10 border-x-8 border-black">
-          <div className="flex animate-marquee gap-5">
-            {/* Map over clients to display logos */}
-            {data.clients.concat(data.clients).map((client, index) => (
-              <a key={index} href={client.link} target="_blank" rel="noopener noreferrer">
-                <img
-                  src={client.logo}
-                  alt={`Client Logo ${index + 1}`}
-                  className="h-32 w-full object-contain  transition-transform duration-300 hover:scale-150" // Increased height and added flex-shrink-0
-                />
-              </a>
+        <div className="w-3/4 mx-auto mt-20 border-x-4 "   style={{ borderLeft: `4px solid ${clientsData.textColor}`, borderRight: `4px solid ${clientsData.textColor}` }}>
+          <Slider
+            width="100px"
+            duration={10}
+            pauseOnHover={true}
+           
+          >
+            {clientsData.clients.map((client, index) => (
+              <div key={index} className="mx-2">
+                <Slider.Slide>
+                  <a href={client.link} target="_blank" rel="noopener noreferrer">
+                    <img src={client.logo} alt={`Client ${index}`} className="w-24" />
+                  </a>
+                </Slider.Slide>
+              </div>
             ))}
-          </div>
+          </Slider>
         </div>
       </div>
     </div>

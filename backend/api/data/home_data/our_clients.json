@@ -1,0 +1,31 @@
+{
+    "title": "Our Clientelle",
+    "bgColor": "white",
+    "textColor": "#000",
+    "clients": [
+        {
+            "logo": "https://upload.wikimedia.org/wikipedia/commons/thumb/2/24/Samsung_Logo.svg/2560px-Samsung_Logo.svg.png",
+            "link": "https://www.samsung.com"
+        },
+        {
+            "logo": "data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCAzODQgNTEyIj48IS0tIUZvbnQgQXdlc29tZSBGcmVlIDYuNi4wIGJ5IEBmb250YXdlc29tZSAtIGh0dHBzOi8vZm9udGF3ZXNvbWUuY29tIExpY2Vuc2UgLSBodHRwczovL2ZvbnRhd2Vzb21lLmNvbS9saWNlbnNlL2ZyZWUgQ29weXJpZ2h0IDIwMjQgRm9udGljb25zLCBJbmMuLS0+PHBhdGggZmlsbD0iI2ZlZmZmZiIgZD0iTTI5Ny4yIDI0OC45QzMxMS42IDIyOC4zIDMyMCAyMDMuMiAzMjAgMTc2YzAtNzAuNy01Ny4zLTEyOC0xMjgtMTI4UzY0IDEwNS4zIDY0IDE3NmMwIDI3LjIgOC40IDUyLjMgMjIuOCA3Mi45YzMuNyA1LjMgOC4xIDExLjMgMTIuOCAxNy43YzAgMCAwIDAgMCAwYzEyLjkgMTcuNyAyOC4zIDM4LjkgMzkuOCA1OS44YzEwLjQgMTkgMTUuNyAzOC44IDE4LjMgNTcuNUwxMDkgMzg0Yy0yLjItMTItNS45LTIzLjctMTEuOC0zNC41Yy05LjktMTgtMjIuMi0zNC45LTM0LjUtNTEuOGMwIDAgMCAwIDAgMHMwIDAgMCAwYy01LjItNy4xLTEwLjQtMTQuMi0xNS40LTIxLjRDMjcuNiAyNDcuOSAxNiAyMTMuMyAxNiAxNzZDMTYgNzguOCA5NC44IDAgMTkyIDBzMTc2IDc4LjggMTc2IDE3NmMwIDM3LjMtMTEuNiA3MS45LTMxLjQgMTAwLjNjLTUgNy4yLTEwLjIgMTQuMy0xNS40IDIxLjRjMCAwIDAgMCAwIDBzMCAwIDAgMGMtMTIuMyAxNi44LTI0LjYgMzMuNy0zNC41IDUxLjhjLTUuOSAxMC44LTkuNiAyMi41LTExLjggMzQuNWwtNDguNiAwYzIuNi0xOC43IDcuOS0zOC42IDE4LjMtNTcuNWMxMS41LTIwLjkgMjYuOS00Mi4xIDM5LjgtNTkuOGMwIDAgMCAwIDAgMHMwIDAgMCAwczAgMCAwIDBjNC43LTYuNCA5LTEyLjQgMTIuNy0xNy43ek0xOTIgMTI4Yy0yNi41IDAtNDggMjEuNS00OCA0OGMwIDguOC03LjIgMTYtMTYgMTZzLTE2LTcuMi0xNi0xNmMwLTQ0LjIgMzUuOC04MCA4MC04MGM4LjggMCAxNiA3LjIgMTYgMTZzLTcuMiAxNi0xNiAxNnptMCAzODRjLTQ0LjIgMC04MC0zNS44LTgwLTgwbDAtMTYgMTYwIDAgMCAxNmMwIDQ0LjItMzUuOCA4MC04MCA4MHoiLz48L3N2Zz4=",
+            "link": "https://www.example.com/client2"
+        },
+        {
+            "logo": "https://e7.pngegg.com/pngimages/144/206/png-clipart-unilever-pureit-pure-it-logo-icons-logos-emojis-product-logos.png",
+            "link": "https://www.example.com/client3"
+        },
+        {
+            "logo": "https://logos-world.net/wp-content/uploads/2020/11/Hewlett-Packard-Logo-2008-2014.png",
+            "link": "https://www.hp.com"
+        },
+        {
+            "logo": "data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCA1MTIgNTEyIj48IS0tIUZvbnQgQXdlc29tZSBGcmVlIDYuNi4wIGJ5IEBmb250YXdlc29tZSAtIGh0dHBzOi8vZm9udGF3ZXNvbWUuY29tIExpY2Vuc2UgLSBodHRwczovL2ZvbnRhd2Vzb21lLmNvbS9saWNlbnNlL2ZyZWUgQ29weXJpZ2h0IDIwMjQgRm9udGljb25zLCBJbmMuLS0+PHBhdGggZmlsbD0iI2ZlZmZmZiIgZD0iTTI1NiAwYzQuNiAwIDkuMiAxIDEzLjQgMi45TDQ1Ny43IDgyLjhjMjIgOS4zIDM4LjQgMzEgMzguMyA1Ny4yYy0uNSA5OS4yLTQxLjMgMjgwLjctMjEzLjYgMzYzLjJjLTE2LjcgOC0zNi4xIDgtNTIuOCAwQzU3LjMgNDIwLjcgMTYuNSAyMzkuMiAxNiAxNDBjLS4xLTI2LjIgMTYuMy00Ny45IDM4LjMtNTcuMkwyNDIuNyAyLjlDMjQ2LjggMSAyNTEuNCAwIDI1NiAwem0wIDY2LjhsMCAzNzguMUMzOTQgMzc4IDQzMS4xIDIzMC4xIDQzMiAxNDEuNEwyNTYgNjYuOHMwIDAgMCAweiIvPjwvc3ZnPg==",
+            "link": "https://www.example.com/client5"
+        },
+        {
+            "logo": "https://seeklogo.com/images/P/pran-logo-17F049097A-seeklogo.com.png",
+            "link": "https://www.example.com/client6"
+        }
+    ]
+}

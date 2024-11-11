@@ -1,82 +1,68 @@
-import React, { useState } from 'react';
+import React, { useState,useEffect } from 'react';
 import { HexColorPicker } from 'react-colorful';
+import axios from 'axios';
 
-const StatisticsModal = ({ isOpen, onClose }) => {
-  // Mock JSON data for statistics
-  const mockData = {
-    divider: "", // Replace with your divider image
-    heading: "Numbers That Amaze",
-    bgColor: "#f9f9f9", // Background color for the statistics section
-    textColor: "#333", // Text color for the statistics section
-    statsList: [
-      {
-        value: "500+",
-        description: "Secure Installations",
-        bgColor: "#4A5568", // Background color for this stat
-        textColor: "#fff" // Text color for this stat
-      },
-      {
-        value: "1000+",
-        description: "Cleaning Projects",
-        bgColor: "#2B6CB0", // Background color for this stat
-        textColor: "#fff" // Text color for this stat
-      },
-      {
-        value: "800+",
-        description: "Pest Control Jobs",
-        bgColor: "#DD6B20", // Background color for this stat
-        textColor: "#fff" // Text color for this stat
-      },
-      {
-        value: "1200+",
-        description: "Happy Households",
-        bgColor: "#38A169", // Background color for this stat
-        textColor: "#fff" // Text color for this stat
-      },
-    ],
-  };
+const StatisticsModal = ({ isOpen, onClose}) => {
+  const apiUrl = import.meta.env.VITE_API_URL;
 
-  const [statisticsData, setStatisticsData] = useState(mockData);
 
-  // Handle changes for the background color
-  const handleBgColorChange = (color) => {
-    setStatisticsData({ ...statisticsData, bgColor: color });
-  };
+  const [statisticsData, setStatisticsData] = useState({
+    heading: '',
+    subtitle: '',
+    bgColor: '',
+    textColor: '',
+    stats: [],
+    numbersBgColor: '',
+    numbersTextColor: '',
+  });
 
-  const handleTextColorChange = (color) => {
-    setStatisticsData({ ...statisticsData, textColor: color });
-  };
-
-  // Handle input changes for statistics
-  const handleStatChange = (index, field, value) => {
-    const updatedStats = [...statisticsData.statsList];
-    updatedStats[index][field] = value;
-    setStatisticsData({ ...statisticsData, statsList: updatedStats });
-  };
-
-  // Handle heading change
-  const handleHeadingChange = (e) => {
-    setStatisticsData({ ...statisticsData, heading: e.target.value });
-  };
-
-  // Handle form submission
-  const handleSubmit = () => {
-    console.log('Updated Statistics Data:', statisticsData);
-    onClose(); // Close modal after saving
-  };
-
-  // Add a new stat entry
-  const handleAddStat = () => {
-    const newStat = {
-      value: "",
-      description: "",
-      bgColor: "#000000", // Default background color
-      textColor: "#ffffff", // Default text color
+  useEffect(() => {
+    // Mock JSON data
+    const fetchData = async () => {
+      try {
+        const response = await fetch(`${apiUrl}/home/statistics`); // Replace with your API endpoint
+        const data = await response.json();
+        setStatisticsData(data);
+      } catch (error) {
+        console.error("Error fetching  data:", error);
+      }
     };
+
+
+    // Simulating an API call
+    fetchData()
+  }, []);
+
+  // Handle changes for simple fields
+  const handleChange = (field, value) => {
+    setStatisticsData({ ...statisticsData, [field]: value });
+  };
+
+  // Handle changes for statistics array
+  const handleStatChange = (index, field, value) => {
+    const updatedStats = [...statisticsData.stats];
+    updatedStats[index][field] = value;
+    setStatisticsData({ ...statisticsData, stats: updatedStats });
+  };
+
+  // Add a new statistic entry
+  const handleAddStat = () => {
+    const newStat = { value: "", label: "" };
     setStatisticsData((prevData) => ({
       ...prevData,
-      statsList: [...prevData.statsList, newStat],
+      stats: [...prevData.stats, newStat],
     }));
+  };
+
+  // Handle form submission and send patch request
+  const handleSubmit = async () => {
+    try {
+      await axios.patch(`${apiUrl}/home/statistics/`, statisticsData);
+      console.log('Statistics data updated successfully!');
+      onClose(); // Close modal after saving
+    } catch (error) {
+      console.error('Error updating statistics data:', error);
+    }
   };
 
   return (
@@ -92,70 +78,110 @@ const StatisticsModal = ({ isOpen, onClose }) => {
           <input
             type="text"
             value={statisticsData.heading}
-            onChange={handleHeadingChange}
+            onChange={(e) => handleChange('heading', e.target.value)}
             className="input input-bordered w-full"
             placeholder="Enter heading"
+          />
+        </div>
+
+        {/* Editable Subtitle */}
+        <div className="mb-4">
+          <label className="block mb-1">Subtitle:</label>
+          <textarea
+            value={statisticsData.subtitle}
+            onChange={(e) => handleChange('subtitle', e.target.value)}
+            className="textarea textarea-bordered w-full"
+            placeholder="Enter subtitle"
           />
         </div>
 
         {/* Background Color Picker */}
         <div className="mb-4">
           <label className="block mb-1">Background Color:</label>
-          <div className='flex items-center'>
-            <div className="hex">
-                dv
+          <div className="flex items-center">
             <HexColorPicker
               color={statisticsData.bgColor}
-              onChange={handleBgColorChange}
+              onChange={(color) => handleChange('bgColor', color)}
               className="w-20 h-20"
             />
-            </div>
             <input
               type="text"
               value={statisticsData.bgColor}
-              onChange={(e) => handleBgColorChange(e.target.value)}
+              onChange={(e) => handleChange('bgColor', e.target.value)}
               className="input input-bordered w-32 ml-2"
               placeholder="Hex Code"
             />
-         
           </div>
         </div>
 
         {/* Text Color Picker */}
         <div className="mb-4">
           <label className="block mb-1">Text Color:</label>
-          <div className='flex items-center'>
-
-            <div className="hex">
+          <div className="flex items-center">
             <HexColorPicker
               color={statisticsData.textColor}
-              onChange={handleTextColorChange}
+              onChange={(color) => handleChange('textColor', color)}
               className="w-20 h-20"
             />
-            </div>
             <input
               type="text"
               value={statisticsData.textColor}
-              onChange={(e) => handleTextColorChange(e.target.value)}
+              onChange={(e) => handleChange('textColor', e.target.value)}
               className="input input-bordered w-32 ml-2"
               placeholder="Hex Code"
             />
           </div>
         </div>
 
-        {/* Statistics List Table */}
+        {/* Numbers Background Color Picker */}
+        <div className="mb-4">
+          <label className="block mb-1">Numbers Background Color:</label>
+          <div className="flex items-center">
+            <HexColorPicker
+              color={statisticsData.numbersBgColor}
+              onChange={(color) => handleChange('numbersBgColor', color)}
+              className="w-20 h-20"
+            />
+            <input
+              type="text"
+              value={statisticsData.numbersBgColor}
+              onChange={(e) => handleChange('numbersBgColor', e.target.value)}
+              className="input input-bordered w-32 ml-2"
+              placeholder="Hex Code"
+            />
+          </div>
+        </div>
+
+        {/* Numbers Text Color Picker */}
+        <div className="mb-4">
+          <label className="block mb-1">Numbers Text Color:</label>
+          <div className="flex items-center">
+            <HexColorPicker
+              color={statisticsData.numbersTextColor}
+              onChange={(color) => handleChange('numbersTextColor', color)}
+              className="w-20 h-20"
+            />
+            <input
+              type="text"
+              value={statisticsData.numbersTextColor}
+              onChange={(e) => handleChange('numbersTextColor', e.target.value)}
+              className="input input-bordered w-32 ml-2"
+              placeholder="Hex Code"
+            />
+          </div>
+        </div>
+
+        {/* Statistics List */}
         <table className="table w-full">
           <thead>
             <tr>
               <th>Value</th>
-              <th>Description</th>
-              <th>Background Color</th>
-              <th>Text Color</th>
+              <th>Label</th>
               <th>Actions</th>
             </tr>
           </thead>
           <tbody>
-            {statisticsData.statsList.map((stat, index) => (
+            {statisticsData.stats.map((stat, index) => (
               <tr key={index}>
                 <td>
                   <input
@@ -169,53 +195,17 @@ const StatisticsModal = ({ isOpen, onClose }) => {
                 <td>
                   <input
                     type="text"
-                    value={stat.description}
-                    onChange={(e) => handleStatChange(index, 'description', e.target.value)}
+                    value={stat.label}
+                    onChange={(e) => handleStatChange(index, 'label', e.target.value)}
                     className="input input-bordered w-full"
-                    placeholder="Enter description"
+                    placeholder="Enter label"
                   />
                 </td>
                 <td>
-                  <div className='flex items-center'>
-                    <div className="hex">
-                    <HexColorPicker
-                      color={stat.bgColor}
-                      onChange={(color) => handleStatChange(index, 'bgColor', color)}
-                      className="w-20 h-20"
-                    />
-                    </div>
-                    <input
-                      type="text"
-                      value={stat.bgColor}
-                      onChange={(e) => handleStatChange(index, 'bgColor', e.target.value)}
-                      className="input input-bordered w-32 ml-2"
-                      placeholder="Hex Code"
-                    />
-                  </div>
-                </td>
-                <td>
-                  <div className='flex items-center'>
-                    <div className="hex">
-                    <HexColorPicker
-                      color={stat.textColor}
-                      onChange={(color) => handleStatChange(index, 'textColor', color)}
-                      className="w-20 h-20"
-                    />
-                    </div>
-                    <input
-                      type="text"
-                      value={stat.textColor}
-                      onChange={(e) => handleStatChange(index, 'textColor', e.target.value)}
-                      className="input input-bordered w-32 ml-2"
-                      placeholder="Hex Code"
-                    />
-                  </div>
-                </td>
-                <td>
                   <button className="btn btn-danger" onClick={() => {
-                    const updatedStats = [...statisticsData.statsList];
-                    updatedStats.splice(index, 1); // Remove stat
-                    setStatisticsData({ ...statisticsData, statsList: updatedStats });
+                    const updatedStats = [...statisticsData.stats];
+                    updatedStats.splice(index, 1); // Remove statistic
+                    setStatisticsData({ ...statisticsData, stats: updatedStats });
                   }}>Remove</button>
                 </td>
               </tr>

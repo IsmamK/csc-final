@@ -1,16 +1,24 @@
 import React, { useState } from 'react';
-import { HexColorPicker } from "react-colorful"; // Ensure you install react-colorful for color picking
+import { HexColorPicker } from "react-colorful"; // Ensure you have react-colorful installed for color picking
 
 const HeroModal = ({ isOpen, onClose }) => {
   // Static data for the hero component
+  const apiUrl = import.meta.env.VITE_API_URL;
+
   const [heroData, setHeroData] = useState({
-    divider: "", // Set your divider image path if needed
     bgColor: "white", // Default background color
     textColor: "#333", // Default text color
     title: "We're the one you're looking for",
     description: "Lorem ipsum, dolor sit amet consectetur adipisicing elit. Obcaecati eum culpa nihil perferendis consectetur voluptas eaque cum odio numquam consequuntur.",
     buttonText: "Call to Action",
-    imageUrl: "https://img.freepik.com/premium-photo/technical-support-operators-with-headsets-white-background_495423-53547.jpg?w=2000"
+    image1: null, // Will hold the file object for image 1
+    image2: null, // Will hold the file object for image 2
+    altText1: "Hero Image 1",
+    altText2: "Hero Image 2",
+    contactLink: "#",
+    contactText: "Contact Us",
+    ctaLink: "#",
+    ctaText: "Call to Action",
   });
 
   // Handle input changes
@@ -18,14 +26,58 @@ const HeroModal = ({ isOpen, onClose }) => {
     const { name, value } = e.target;
     setHeroData((prevData) => ({
       ...prevData,
-      [name]: value
+      [name]: value,
     }));
   };
 
+  // Function to convert file to Base64
+  const toBase64 = (file) => {
+    return new Promise((resolve, reject) => {
+      const reader = new FileReader();
+      reader.readAsDataURL(file);
+      reader.onloadend = () => resolve(reader.result);
+      reader.onerror = reject;
+    });
+  };
+
+  // Handle file input changes
+  const handleFileChange = async (e) => {
+    const { name, files } = e.target;
+    if (files[0]) {
+      const base64Image = await toBase64(files[0]);
+      setHeroData((prevData) => ({
+        ...prevData,
+        [name]: base64Image,
+      }));
+    }
+  };
+
   // Handle form submission
-  const handleSubmit = () => {
-    console.log('Updated Hero Data:', heroData);
-    onClose(); // Close modal after saving
+  const handleSubmit = async () => {
+    try {
+      // Prepare data to patch
+      const dataToPatch = {
+        ...heroData,
+      };
+
+      // Send PATCH request to the API
+      const response = await fetch(`${apiUrl}/home/hero/`, {
+        method: 'PATCH',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(dataToPatch),
+      });
+
+      if (!response.ok) {
+        throw new Error('Failed to update hero data');
+      }
+
+      console.log('Updated Hero Data:', dataToPatch);
+      onClose(); // Close modal after saving
+    } catch (error) {
+      console.error("Error updating hero data:", error);
+    }
   };
 
   return (
@@ -69,12 +121,23 @@ const HeroModal = ({ isOpen, onClose }) => {
         </div>
 
         <div className="mb-4">
-          <label className="block mb-1">Image URL:</label>
+          <label className="block mb-1">Upload Image 1:</label>
           <input
-            type="text"
-            name="imageUrl"
-            value={heroData.imageUrl}
-            onChange={handleChange}
+            type="file"
+            name="image1"
+            accept="image/*"
+            onChange={handleFileChange}
+            className="input input-bordered w-full mb-2"
+          />
+        </div>
+
+        <div className="mb-4">
+          <label className="block mb-1">Upload Image 2:</label>
+          <input
+            type="file"
+            name="image2"
+            accept="image/*"
+            onChange={handleFileChange}
             className="input input-bordered w-full mb-2"
           />
         </div>
@@ -83,11 +146,11 @@ const HeroModal = ({ isOpen, onClose }) => {
           <label className="block mb-1">Background Color:</label>
           <div className="flex items-center mb-2">
             <div className="hex">
-            <HexColorPicker
-              color={heroData.bgColor}
-              onChange={(color) => setHeroData((prevData) => ({ ...prevData, bgColor: color }))}
-              className="w-24 h-24" // Set the dimensions for the color picker
-            />
+              <HexColorPicker
+                color={heroData.bgColor}
+                onChange={(color) => setHeroData((prevData) => ({ ...prevData, bgColor: color }))}
+                className="w-24 h-24" // Set the dimensions for the color picker
+              />
             </div>
             <input
               type="text"
@@ -104,13 +167,12 @@ const HeroModal = ({ isOpen, onClose }) => {
           <label className="block mb-1">Text Color:</label>
           <div className="flex items-center mb-2">
             <div className="hex">
-            <HexColorPicker
-              color={heroData.textColor}
-              onChange={(color) => setHeroData((prevData) => ({ ...prevData, textColor: color }))}
-              className="w-24 h-24" // Set the dimensions for the color picker
-            />
+              <HexColorPicker
+                color={heroData.textColor}
+                onChange={(color) => setHeroData((prevData) => ({ ...prevData, textColor: color }))}
+                className="w-24 h-24" // Set the dimensions for the color picker
+              />
             </div>
-        
             <input
               type="text"
               name="textColor"

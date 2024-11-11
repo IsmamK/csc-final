@@ -5,7 +5,7 @@ from django.views import View
 from django.views.decorators.csrf import csrf_exempt
 from django.utils.decorators import method_decorator
 from django.conf import settings
-
+import re
 # Helper function to read JSON files
 def read_json_file(file_path):
     with open(file_path) as f:
@@ -18,19 +18,231 @@ def write_json_file(file_path, data):
      
         json.dump(data, f, indent=4)
 
-# Helper function to handle file uploads
-def handle_uploaded_file(f, component, index):
-    upload_path = os.path.join(settings.MEDIA_ROOT, component)
-    os.makedirs(upload_path, exist_ok=True)  # Create directory if it doesn't exist
-    file_name = f"{component}_{index}.png"  # Customize file naming as needed
-    file_path = os.path.join(upload_path, file_name)
-    with open(file_path, 'wb+') as destination:
-  
-        for chunk in f.chunks():
-            destination.write(chunk)
-    return os.path.join(settings.MEDIA_URL, component, file_name)  # URL to access the file
 
 # Views for each component
+
+# ------------------------------------- HOME COMPONENTS -------------------------------------------------------------------
+
+from django.http import JsonResponse
+from django.views import View
+from django.views.decorators.csrf import csrf_exempt
+from django.utils.decorators import method_decorator
+import json
+
+# Helper function to read JSON files
+def read_json_file(file_path):
+    try:
+        with open(file_path) as f:
+            return json.load(f)
+    except (FileNotFoundError, json.JSONDecodeError) as e:
+        return {"error": str(e)}
+
+# Helper function to write to JSON files
+def write_json_file(file_path, data):
+    with open(file_path, 'w') as f:
+        json.dump(data, f, indent=4)
+
+# Template for Home Component Views
+class CarouselView(View):
+    @method_decorator(csrf_exempt)
+    def dispatch(self, *args, **kwargs):
+        return super().dispatch(*args, **kwargs)
+
+    def get(self, request):
+        data = read_json_file('api/data/home_data/carousel.json')
+        return JsonResponse(data,safe=False)
+
+    def patch(self, request):
+        data = read_json_file('api/data/home_data/carousel.json')
+        updated_data = json.loads(request.body)['images']
+        
+    # Check if both data and updated_data are lists
+        if isinstance(data, list) and isinstance(updated_data, list):
+            data = updated_data  # Replace the entire list with the new list
+        else:
+            return JsonResponse({"error": "Invalid data format"}, status=400)
+
+   
+        write_json_file('api/data/home_data/carousel.json', data)
+        return JsonResponse(data,safe=False)
+    
+class HeroView(View):
+    @method_decorator(csrf_exempt)
+    def dispatch(self, *args, **kwargs):
+        return super().dispatch(*args, **kwargs)
+
+    def get(self, request):
+        data = read_json_file('api/data/home_data/hero.json')
+        return JsonResponse(data)
+
+    def patch(self, request):
+        data = read_json_file('api/data/home_data/hero.json')
+        updated_data = json.loads(request.body)
+        data.update(updated_data)
+        write_json_file('api/data/home_data/hero.json', data)
+        return JsonResponse(data)
+
+class CardsView(View):
+    @method_decorator(csrf_exempt)
+    def dispatch(self, *args, **kwargs):
+        return super().dispatch(*args, **kwargs)
+
+    def get(self, request):
+        data = read_json_file('api/data/home_data/cards.json')
+        return JsonResponse(data)
+
+    def patch(self, request):
+        data = read_json_file('api/data/home_data/cards.json')
+        updated_data = json.loads(request.body)
+        data.update(updated_data)
+        write_json_file('api/data/home_data/cards.json', data)
+        return JsonResponse(data)
+
+class ServicesView(View):
+    @method_decorator(csrf_exempt)
+    def dispatch(self, *args, **kwargs):
+        return super().dispatch(*args, **kwargs)
+
+    def get(self, request):
+        data = read_json_file('api/data/home_data/services.json')
+        return JsonResponse(data)
+
+    def patch(self, request):
+        data = read_json_file('api/data/home_data/services.json')
+        updated_data = json.loads(request.body)
+        data.update(updated_data)
+        write_json_file('api/data/home_data/services.json', data)
+        return JsonResponse(data)
+
+class StatisticsView(View):
+    @method_decorator(csrf_exempt)
+    def dispatch(self, *args, **kwargs):
+        return super().dispatch(*args, **kwargs)
+
+    def get(self, request):
+        data = read_json_file('api/data/home_data/statistics.json')
+        return JsonResponse(data)
+
+    def patch(self, request):
+        data = read_json_file('api/data/home_data/statistics.json')
+        updated_data = json.loads(request.body)
+        data.update(updated_data)
+        write_json_file('api/data/home_data/statistics.json', data)
+        return JsonResponse(data)
+
+class GridCardsView(View):
+    @method_decorator(csrf_exempt)
+    def dispatch(self, *args, **kwargs):
+        return super().dispatch(*args, **kwargs)
+
+    def get(self, request):
+        data = read_json_file('api/data/home_data/grid_cards.json')
+        return JsonResponse(data)
+
+    def patch(self, request):
+        data = read_json_file('api/data/home_data/grid_cards.json')
+        updated_data = json.loads(request.body)
+        data.update(updated_data)
+        write_json_file('api/data/home_data/grid_cards.json', data)
+        return JsonResponse(data)
+
+class WhyUsView(View):
+    @method_decorator(csrf_exempt)
+    def dispatch(self, *args, **kwargs):
+        return super().dispatch(*args, **kwargs)
+
+    def get(self, request):
+        data = read_json_file('api/data/home_data/why_us.json')
+        return JsonResponse(data)
+
+    def patch(self, request):
+        data = read_json_file('api/data/home_data/why_us.json')
+        updated_data = json.loads(request.body)
+        data.update(updated_data)
+        write_json_file('api/data/home_data/why_us.json', data)
+        return JsonResponse(data)
+
+class OurClientsView(View):
+    @method_decorator(csrf_exempt)
+    def dispatch(self, *args, **kwargs):
+        return super().dispatch(*args, **kwargs)
+
+    def get(self, request):
+        data = read_json_file('api/data/home_data/our_clients.json')
+        return JsonResponse(data)
+
+    def patch(self, request):
+        data = read_json_file('api/data/home_data/our_clients.json')
+        updated_data = json.loads(request.body)
+        data.update(updated_data)
+        write_json_file('api/data/home_data/our_clients.json', data)
+        return JsonResponse(data)
+
+class NewsView(View):
+    @method_decorator(csrf_exempt)
+    def dispatch(self, *args, **kwargs):
+        return super().dispatch(*args, **kwargs)
+
+    def get(self, request):
+        data = read_json_file('api/data/home_data/news.json')
+        return JsonResponse(data)
+
+    def patch(self, request):
+        data = read_json_file('api/data/home_data/news.json')
+        updated_data = json.loads(request.body)
+        data.update(updated_data)
+        write_json_file('api/data/home_data/news.json', data)
+        return JsonResponse(data)
+
+class ContactView(View):
+    @method_decorator(csrf_exempt)
+    def dispatch(self, *args, **kwargs):
+        return super().dispatch(*args, **kwargs)
+
+    def get(self, request):
+        data = read_json_file('api/data/home_data/contact.json')
+        return JsonResponse(data)
+
+    def patch(self, request):
+        data = read_json_file('api/data/home_data/contact.json')
+        updated_data = json.loads(request.body)
+        data.update(updated_data)
+        write_json_file('api/data/home_data/contact.json', data)
+        return JsonResponse(data)
+
+class LocationView(View):
+    @method_decorator(csrf_exempt)
+    def dispatch(self, *args, **kwargs):
+        return super().dispatch(*args, **kwargs)
+
+    def get(self, request):
+        data = read_json_file('api/data/home_data/location.json')
+        return JsonResponse(data)
+
+    def patch(self, request):
+        data = read_json_file('api/data/home_data/location.json')
+        updated_data = json.loads(request.body)
+        data.update(updated_data)
+        write_json_file('api/data/home_data/location.json', data)
+        return JsonResponse(data)
+
+class FeaturedVideoView(View):
+    @method_decorator(csrf_exempt)
+    def dispatch(self, *args, **kwargs):
+        return super().dispatch(*args, **kwargs)
+
+    def get(self, request):
+        data = read_json_file('api/data/home_data/featured_video.json')
+        return JsonResponse(data)
+
+    def patch(self, request):
+        data = read_json_file('api/data/home_data/featured_video.json')
+        updated_data = json.loads(request.body)
+        data.update(updated_data)
+        write_json_file('api/data/home_data/featured_video.json', data)
+        return JsonResponse(data)
+    
+# ------------------------------------------------ ABOUT COMPONENTS ------------------------------------------------ 
 class About1View(View):
     @method_decorator(csrf_exempt)
     def dispatch(self, *args, **kwargs):
@@ -45,11 +257,7 @@ class About1View(View):
         updated_data = json.loads(request.body)
 
         print(updated_data)
-        # Handle file uploads if they exist
-        if request.FILES:
-            for index, (key, value) in enumerate(updated_data.items()):
-                if key.startswith("image") and request.FILES.get(key):
-                    updated_data[key] = handle_uploaded_file(request.FILES[key], 'about1', index + 1)
+  
 
         data.update(updated_data)
         write_json_file('api/data/about_data/about1.json', data)
@@ -70,11 +278,7 @@ class About2View(View):
         updated_data = json.loads(request.body)
        
 
-        # Handle file uploads if they exist
-        if request.FILES:
-            for index, (key, value) in enumerate(updated_data.items()):
-                if key.startswith("image") and request.FILES.get(key):
-                    updated_data[key] = handle_uploaded_file(request.FILES[key], 'about2', index + 1)
+
 
         data.update(updated_data)
         write_json_file('api/data/about_data/about2.json', data)
@@ -109,16 +313,13 @@ class TeamView(View):
         data = read_json_file('api/data/about_data/team.json')
         updated_data = json.loads(request.body)
 
-        # Handle file uploads if they exist
-        if request.FILES:
-            for member in updated_data:
-                if 'imageUrl' in member and request.FILES.get(f"image_{member['id']}"):
-                    member['imageUrl'] = handle_uploaded_file(request.FILES[f"image_{member['id']}"], 'team', member['id'])
+        
 
         data.update(updated_data)
         write_json_file('api/data/about_data/team.json', data)
         return JsonResponse(data,safe=False)
 
+# ------------------------------------------------  CONTACT COMPONENTS ------------------------------------------------ 
 class Contact1View(View):
     @method_decorator(csrf_exempt)
     def dispatch(self, *args, **kwargs):
@@ -132,11 +333,7 @@ class Contact1View(View):
         data = read_json_file('api/data/contact_data/contact1.json')
         updated_data = json.loads(request.body)
 
-        # Handle file uploads if they exist
-        if request.FILES:
-            for index, location in enumerate(updated_data.get("locations", [])):
-                if 'imgSrc' in location and request.FILES.get(f"image_{index}"):
-                    location['imgSrc'] = handle_uploaded_file(request.FILES[f"image_{index}"], 'contact1', index + 1)
+        
 
         data.update(updated_data)
         write_json_file('api/data/contact_data/contact1.json', data)
@@ -156,14 +353,82 @@ class Contact2View(View):
         data = read_json_file('api/data/contact_data/contact2.json')
         updated_data = json.loads(request.body)
 
-        # Handle file uploads if they exist
-        if request.FILES and request.FILES.get("image"):
-            updated_data["imageUrl"] = handle_uploaded_file(request.FILES["image"], 'contact2', 1)
+       
 
         data.update(updated_data)
         write_json_file('api/data/contact_data/contact2.json', data)
         return JsonResponse(data)
     
+# ------------------------ Services  ------------------
+
+class ServicesPageView(View):
+    @method_decorator(csrf_exempt)
+    def dispatch(self, *args, **kwargs):
+        return super().dispatch(*args, **kwargs)
+
+    def get(self, request):
+        data = read_json_file('api/data/services_data/services.json')
+        return JsonResponse(data, safe=False)
+
+    def patch(self, request):
+        # Read existing data
+        data = read_json_file('api/data/services_data/services.json')
+        # Parse incoming patch request data
+        updated_data = json.loads(request.body)
+        
+        # Loop through the current data and update based on 'slug' field
+        for updated_item in updated_data:
+            for i, item in enumerate(data):
+                if item.get("slug") == updated_item.get("slug"):
+                    data[i].update(updated_item)
+                    break
+        
+        # Save updated data back to the JSON file
+        write_json_file('api/data/services_data/services.json', data)
+        return JsonResponse(data, safe=False)
+    
+
+
+    def put(self, request):
+            # Read existing data
+            data = read_json_file('api/data/services_data/services.json')
+            # Parse incoming data
+            updated_data = json.loads(request.body)
+
+            # Flag to track if any items were updated
+            updated_items = 0
+
+            # Loop through the updated data
+            for updated_item in updated_data:
+                # Check if 'slug' is missing, and generate it from 'title' if available
+                if 'slug' not in updated_item and 'title' in updated_item:
+                    # Replace whitespace with hyphens and make lowercase
+                    updated_item['slug'] = re.sub(r'\s+', '-', updated_item['title'].strip().lower())
+
+                # If 'slug' is still missing (no title provided), skip this item
+                if 'slug' not in updated_item:
+                    continue
+
+                # Check if the item already exists (by matching slug)
+                updated = False
+                for i, item in enumerate(data):
+                    if item.get("slug") == updated_item.get("slug"):
+                        data[i] = updated_item  # Replace the item entirely
+                        updated = True
+                        updated_items += 1
+                        break
+
+                # If the item doesn't exist, add it as a new item
+                if not updated:
+                    data.append(updated_item)  # Add new item to the data list
+
+            # Save the updated data back to the JSON file
+            write_json_file('api/data/services_data/services.json', data)
+
+            # Return the updated data as the response
+            return JsonResponse({"updated_items": updated_items, "data": data}, safe=False)
+
+
 # ------------------------ PROJECTS  ------------------
 
 class ProjectsView(View):
@@ -179,15 +444,12 @@ class ProjectsView(View):
         data = read_json_file('api/data/project_data/projects.json')
         updated_data = json.loads(request.body)
 
-        # Handle file uploads if they exist
-        if request.FILES:
-            for index, project in enumerate(updated_data):
-                if 'imageUrl' in project and request.FILES.get(f"image_{project['id']}"):
-                    project['imageUrl'] = handle_uploaded_file(request.FILES[f"image_{project['id']}"], 'projects', project['id'])
 
         data.update(updated_data)
-        write_json_file('api/data/projects.json', data)
+        write_json_file('api/data/project_data/projects.json', data)
         return JsonResponse(data, safe=False)
+    
+# ------------------------------------------------ GALLERY ------------------------------------------------ 
 
 class GalleryView(View):
     @method_decorator(csrf_exempt)
@@ -204,11 +466,6 @@ class GalleryView(View):
         data = read_json_file('api/data/gallery_data/gallery.json')
         updated_data = json.loads(request.body)
 
-        # Handle file uploads if they exist
-        if request.FILES:
-            for index, item in enumerate(updated_data['items']):
-                if 'image' in item and request.FILES.get(f"image_{index}"):
-                    item['image'] = handle_uploaded_file(request.FILES[f"image_{index}"], 'gallery', index + 1)
 
         # Update the existing data with the new data
         data.update(updated_data)

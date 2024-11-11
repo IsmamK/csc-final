@@ -1,9 +1,20 @@
 // ServiceDetail.js
-import React from 'react';
+import React,{useState} from 'react';
 import { useParams } from 'react-router-dom';
-import { servicesData } from '../../servicesData'; // Adjust the path as necessary
+// import { servicesData } from '../../servicesData'; // Adjust the path as necessary
 
 const ServiceDetail = () => {
+  const apiUrl = import.meta.env.VITE_API_URL;
+  const [servicesData,setServicesData] = useState([])
+
+  useEffect(()=>{
+    fetch(`${apiUrl}/services/`)
+    .then(res=>res.json())
+    .then(data=>{
+      setServicesData(data)
+    })
+  },[])
+
   const { serviceId } = useParams();
   const service = servicesData.find(service => service.id === serviceId);
 

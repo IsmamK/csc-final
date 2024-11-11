@@ -1,215 +1,292 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
+import { HexColorPicker } from 'react-colorful';
 
 const GalleryModal = ({ isOpen, onClose }) => {
-    const [galleryData, setGalleryData] = useState(  [
-        {
-          image: "https://flowbite.s3.amazonaws.com/docs/gallery/masonry/image.jpg",
-          subtitle: "The First Light",
-          title: "Shooting Stars",
-          description: "Photo booth fam kinfolk cold-pressed sriracha leggings jianbing microdosing tousled waistcoat."
-        },
-        {
-          image: "https://flowbite.s3.amazonaws.com/docs/gallery/masonry/image-1.jpg",
-          subtitle: "The Second Light",
-          title: "The Catalyzer",
-          description: "Photo booth fam kinfolk cold-pressed sriracha leggings jianbing microdosing tousled waistcoat."
-        },
-        {
-          image: "https://flowbite.s3.amazonaws.com/docs/gallery/masonry/image-2.jpg",
-          subtitle: "The Third Light",
-          title: "The 400 Blows",
-          description: "Photo booth fam kinfolk cold-pressed sriracha leggings jianbing microdosing tousled waistcoat."
-        },
-        {
-          image: "https://flowbite.s3.amazonaws.com/docs/gallery/masonry/image-3.jpg",
-          subtitle: "The Fourth Light",
-          title: "Neptune",
-          description: "Photo booth fam kinfolk cold-pressed sriracha leggings jianbing microdosing tousled waistcoat."
-        },
-        {
-          image: "https://flowbite.s3.amazonaws.com/docs/gallery/masonry/image-4.jpg",
-          subtitle: "The Fifth Light",
-          title: "Holden Caulfield",
-          description: "Photo booth fam kinfolk cold-pressed sriracha leggings jianbing microdosing tousled waistcoat."
-        },
-        {
-          image: "https://flowbite.s3.amazonaws.com/docs/gallery/masonry/image-5.jpg",
-          subtitle: "The Sixth Light",
-          title: "Alper Kamu",
-          description: "Photo booth fam kinfolk cold-pressed sriracha leggings jianbing microdosing tousled waistcoat."
-        },
-        {
-          image: "https://flowbite.s3.amazonaws.com/docs/gallery/masonry/image-6.jpg",
-          subtitle: "The Seventh Light",
-          title: "The Awakening",
-          description: "Photo booth fam kinfolk cold-pressed sriracha leggings jianbing microdosing tousled waistcoat."
-        },
-        {
-          image: "https://flowbite.s3.amazonaws.com/docs/gallery/masonry/image-7.jpg",
-          subtitle: "The Eighth Light",
-          title: "The Discovery",
-          description: "Photo booth fam kinfolk cold-pressed sriracha leggings jianbing microdosing tousled waistcoat."
-        },
-        {
-          image: "https://flowbite.s3.amazonaws.com/docs/gallery/masonry/image-8.jpg",
-          subtitle: "The Ninth Light",
-          title: "The Horizon",
-          description: "Photo booth fam kinfolk cold-pressed sriracha leggings jianbing microdosing tousled waistcoat."
-        },
-        {
-          image: "https://flowbite.s3.amazonaws.com/docs/gallery/masonry/image-9.jpg",
-          subtitle: "The Tenth Light",
-          title: "The Reflection",
-          description: "Photo booth fam kinfolk cold-pressed sriracha leggings jianbing microdosing tousled waistcoat."
-        },
-        {
-          image: "https://flowbite.s3.amazonaws.com/docs/gallery/masonry/image-10.jpg",
-          subtitle: "The Eleventh Light",
-          title: "The Journey",
-          description: "Photo booth fam kinfolk cold-pressed sriracha leggings jianbing microdosing tousled waistcoat."
-        },
-        {
-          image: "https://flowbite.s3.amazonaws.com/docs/gallery/masonry/image-11.jpg",
-          subtitle: "The Twelfth Light",
-          title: "The Dream",
-          description: "Photo booth fam kinfolk cold-pressed sriracha leggings jianbing microdosing tousled waistcoat."
-        },
-      ]);
+  const API_URL = import.meta.env.VITE_API_URL; // Base URL from .env
 
-    const handleInputChange = (index, field, value) => {
-        const updatedGallery = [...galleryData];
-        updatedGallery[index][field] = value;
-        setGalleryData(updatedGallery);
-    };
+  const [galleryData, setGalleryData] = useState({
+    title: "",
+    subtitle: "",
+    bgColor: "",
+    textColor: "",
+    imageBgColor: "",
+    imageTextColor: "",
+    items: []
+  });
 
-    const handleImageUpload = (index, event) => {
-        const file = event.target.files[0];
-        if (file) {
-            const imageUrl = URL.createObjectURL(file);
-            const updatedGallery = [...galleryData];
-            updatedGallery[index].image = imageUrl;
-            setGalleryData(updatedGallery);
+  useEffect(() => {
+    fetch(`${API_URL}/gallery`)
+      .then(res => res.json())
+      .then(data => {
+        setGalleryData(data);
+      });
+  }, [API_URL]);
+
+  // Handler for updating simple string fields (title, subtitle)
+  const handleFieldChange = (field, value) => {
+    setGalleryData((prevData) => ({ ...prevData, [field]: value }));
+  };
+
+  // Handler for updating color fields
+  const handleColorChange = (field, value) => {
+    setGalleryData((prevData) => ({ ...prevData, [field]: value }));
+  };
+
+  // Handler for updating individual image items
+  const handleInputChange = (index, field, value) => {
+    const updatedItems = [...galleryData.items];
+    updatedItems[index][field] = value;
+    setGalleryData({ ...galleryData, items: updatedItems });
+  };
+
+  // Handler for image uploads
+  const handleImageUpload = (index, event) => {
+    const file = event.target.files[0];
+    if (file) {
+      const imageUrl = URL.createObjectURL(file);
+      const updatedItems = [...galleryData.items];
+      updatedItems[index].image = imageUrl;
+      setGalleryData({ ...galleryData, items: updatedItems });
+    }
+  };
+
+  // Convert file to Base64
+  const convertToBase64 = (file) => {
+    return new Promise((resolve, reject) => {
+      const reader = new FileReader();
+      reader.onloadend = () => resolve(reader.result);
+      reader.onerror = reject;
+      reader.readAsDataURL(file);
+    });
+  };
+
+  // Add a new image item
+  const addNewImage = () => {
+    setGalleryData({
+      ...galleryData,
+      items: [
+        ...galleryData.items,
+        { image: null, subtitle: "", title: "", description: "" }
+      ]
+    });
+  };
+
+  // Remove an image item
+  const handleRemoveImage = (index) => {
+    setGalleryData({
+      ...galleryData,
+      items: galleryData.items.filter((_, i) => i !== index)
+    });
+  };
+
+  // Save handler with PATCH request
+  const handleSave = async () => {
+    const updatedItems = await Promise.all(
+      galleryData.items.map(async (item) => {
+        if (item.image) {
+          const response = await fetch(item.image);
+          const blob = await response.blob();
+          const base64String = await convertToBase64(blob);
+          return { ...item, image: base64String }; // Replace image URL with Base64 string
         }
+        return item;
+      })
+    );
+
+    const dataToSend = {
+      ...galleryData,
+      items: updatedItems,
     };
 
-    const addNewImage = () => {
-        setGalleryData([
-            ...galleryData,
-            {
-                image: null,
-                subtitle: "",
-                title: "",
-                description: ""
-            }
-        ]);
-    };
+    try {
+      const response = await fetch(`${API_URL}/gallery/`, {
+        method: 'PATCH',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(dataToSend),
+      });
 
-    const handleRemoveImage = (index) => {
-        setGalleryData(galleryData.filter((_, i) => i !== index));
-    };
+      if (!response.ok) {
+        throw new Error('Failed to update gallery data');
+      }
 
-    const handleSave = () => {
-        console.log("Gallery Data Saved:", galleryData);
-        onClose();
-    };
+      console.log("Gallery Data Saved:", dataToSend);
+      onClose();
+      window.location.reload()
+    } catch (error) {
+      console.error("Error saving gallery data:", error);
+    }
+  };
 
-    return (
-        <dialog id="gallery_modal" className={`modal ${isOpen ? 'modal-open' : ''} `}>
-      
-            <div className="modal-box w-11/12 max-w-5xl relative">
-            <button onClick={onClose} className="btn btn-sm btn-circle absolute right-2 top-2">
+  return (
+    <dialog id="gallery_modal" className={`modal ${isOpen ? 'modal-open' : ''}`}>
+      <div className="modal-box w-11/12 max-w-5xl relative">
+        <button onClick={onClose} className="btn btn-sm btn-circle absolute right-2 top-2">
           ✕
         </button>
-                <h3 className="font-bold text-lg mb-4">Gallery</h3>
+        <h3 className="font-bold text-lg mb-4">Edit Gallery</h3>
 
-                <table className="w-full table-fixed border-collapse">
-                    <thead>
-                        <tr>
-                            <th className="border p-2 w-1/5">Image</th>
-                            <th className="border p-2 w-1/5">Subtitle</th>
-                            <th className="border p-2 w-1/5">Title</th>
-                            <th className="border p-2 w-1/5">Description</th>
-                            <th className="border p-2 w-1/5">Actions</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        {galleryData.map((item, index) => (
-                            <tr key={index}>
-                                <td className="border p-2 text-center align-middle">
-                                    {item.image ? (
-                                        <div>
-                                            <img src={item.image} alt={item.title} className="w-20 h-20 object-cover mb-2" />
-                                            <input
-                                                type="file"
-                                                accept="image/*"
-                                                onChange={(e) => handleImageUpload(index, e)}
-                                                className="btn btn-sm btn-outline w-full"
-                                            />
-                                        </div>
-                                    ) : (
-                                        <input
-                                            type="file"
-                                            accept="image/*"
-                                            onChange={(e) => handleImageUpload(index, e)}
-                                            className="input border border-gray-300 rounded p-2"
-                                        />
-                                    )}
-                                </td>
-                                <td className="border p-2 align-middle">
-                                    <input
-                                        type="text"
-                                        className="input border border-gray-300 rounded p-2 w-full"
-                                        placeholder="Subtitle"
-                                        value={item.subtitle}
-                                        onChange={(e) => handleInputChange(index, 'subtitle', e.target.value)}
-                                    />
-                                </td>
-                                <td className="border p-2 align-middle">
-                                    <input
-                                        type="text"
-                                        className="input border border-gray-300 rounded p-2 w-full"
-                                        placeholder="Title"
-                                        value={item.title}
-                                        onChange={(e) => handleInputChange(index, 'title', e.target.value)}
-                                    />
-                                </td>
-                                <td className="border p-2 align-middle">
-                                    <textarea
-                                        className="textarea border border-gray-300 rounded p-2 w-full"
-                                        placeholder="Description"
-                                        rows="2"
-                                        value={item.description}
-                                        onChange={(e) => handleInputChange(index, 'description', e.target.value)}
-                                    />
-                                </td>
-                                <td className="border p-2 text-center align-middle ">
-                                    <div className='flex flex-col gap-4'>
-                                    <button
-                                        className="btn btn-sm btn-error mb-2"
-                                        onClick={() => handleRemoveImage(index)}
-                                    >
-                                        Remove
-                                    </button>
-                                  
-                                    </div>
-                                </td>
-                            </tr>
-                        ))}
-                    </tbody>
-                </table>
+        {/* Title Input */}
+        <div className="mb-4">
+          <label className="block mb-1">Title:</label>
+          <input
+            type="text"
+            value={galleryData.title}
+            onChange={(e) => handleFieldChange('title', e.target.value)}
+            className="input input-bordered w-full mb-1"
+          />
+        </div>
 
-                <div className="flex justify-between mt-4">
-                    <button className="btn btn-primary" onClick={addNewImage}>
-                        Add New Image
-                    </button>
-                    <div className="modal-action">
-                        <button className="btn" onClick={onClose}>Close</button>
-                        <button className="btn btn-success" onClick={handleSave}>Save</button>
+        {/* Subtitle Input */}
+        <div className="mb-4">
+          <label className="block mb-1">Subtitle:</label>
+          <textarea
+            value={galleryData.subtitle}
+            onChange={(e) => handleFieldChange('subtitle', e.target.value)}
+            className="textarea textarea-bordered w-full mb-1"
+            rows={3}
+          />
+        </div>
+
+        {/* Background Color Picker */}
+        <label className="block mr-2">Background Color:</label>
+        <div className="mb-4 hex flex items-center">
+          <HexColorPicker
+            color={galleryData.bgColor}
+            onChange={(color) => handleColorChange('bgColor', color)}
+          />
+          <input
+            type="text"
+            value={galleryData.bgColor}
+            onChange={(e) => handleColorChange('bgColor', e.target.value)}
+            className="input input-bordered w-20 ml-2"
+          />
+        </div>
+
+        {/* Text Color Picker */}
+        <label className="block mr-2">Text Color:</label>
+        <div className="mb-4 hex flex items-center">
+          <HexColorPicker
+            color={galleryData.textColor}
+            onChange={(color) => handleColorChange('textColor', color)}
+          />
+          <input
+            type="text"
+            value={galleryData.textColor}
+            onChange={(e) => handleColorChange('textColor', e.target.value)}
+            className="input input-bordered w-20 ml-2"
+          />
+        </div>
+
+        {/* Image Background Color Picker */}
+        <label className="block mr-2">Image Background Color:</label>
+        <div className="mb-4 hex flex items-center">
+          <HexColorPicker
+            color={galleryData.imageBgColor}
+            onChange={(color) => handleColorChange('imageBgColor', color)}
+          />
+          <input
+            type="text"
+            value={galleryData.imageBgColor}
+            onChange={(e) => handleColorChange('imageBgColor', e.target.value)}
+            className="input input-bordered w-20 ml-2"
+          />
+        </div>
+
+        {/* Image Text Color Picker */}
+        <label className="block mr-2">Image Text Color:</label>
+        <div className="mb-4 hex flex items-center">
+          <HexColorPicker
+            color={galleryData.imageTextColor}
+            onChange={(color) => handleColorChange('imageTextColor', color)}
+          />
+          <input
+            type="text"
+            value={galleryData.imageTextColor}
+            onChange={(e) => handleColorChange('imageTextColor', e.target.value)}
+            className="input input-bordered w-20 ml-2"
+          />
+        </div>
+
+        {/* Image Items Table */}
+        <table className="w-full table-fixed border-collapse">
+          <thead>
+            <tr>
+              <th className="border p-2 w-1/5">Image</th>
+              <th className="border p-2 w-1/5">Subtitle</th>
+              <th className="border p-2 w-1/5">Title</th>
+              <th className="border p-2 w-1/5">Description</th>
+              <th className="border p-2 w-1/5">Actions</th>
+            </tr>
+          </thead>
+          <tbody>
+            {galleryData.items.map((item, index) => (
+              <tr key={index}>
+                <td className="border p-2 text-center align-middle">
+                  {item.image ? (
+                    <div>
+                      <img src={item.image} alt={item.title} className="w-20 h-20 object-cover mb-2" />
+                      <input
+                        type="file"
+                        accept="image/*"
+                        onChange={(e) => handleImageUpload(index, e)}
+                        className="btn btn-sm btn-outline w-full"
+                      />
                     </div>
-                </div>
-            </div>
-        </dialog>
-    );
+                  ) : (
+                    <input
+                      type="file"
+                      accept="image/*"
+                      onChange={(e) => handleImageUpload(index, e)}
+                      className="input border border-gray-300 rounded p-2"
+                    />
+                  )}
+                </td>
+                <td className="border p-2 align-middle">
+                  <input
+                    type="text"
+                    value={item.subtitle}
+                    onChange={(e) => handleInputChange(index, 'subtitle', e.target.value)}
+                    className="input input-bordered w-full"
+                  />
+                </td>
+                <td className="border p-2 align-middle">
+                  <input
+                    type="text"
+                    value={item.title}
+                    onChange={(e) => handleInputChange(index, 'title', e.target.value)}
+                    className="input input-bordered w-full"
+                  />
+                </td>
+                <td className="border p-2 align-middle">
+                  <input
+                    type="text"
+                    value={item.description}
+                    onChange={(e) => handleInputChange(index, 'description', e.target.value)}
+                    className="input input-bordered w-full"
+                  />
+                </td>
+                <td className="border p-2 align-middle">
+                  <button
+                    onClick={() => handleRemoveImage(index)}
+                    className="btn btn-sm btn-error"
+                  >
+                    Remove
+                  </button>
+                </td>
+              </tr>
+            ))}
+          </tbody>
+        </table>
+
+    <div className='flex  justify-between'>
+        <button onClick={addNewImage} className="btn btn-primary mt-4"> + Add Image</button>
+        <button onClick={handleSave} className="btn btn-success mt-4 text-white">Save Changes</button>
+        </div>
+      </div>
+    </dialog>
+  );
 };
 
 export default GalleryModal;

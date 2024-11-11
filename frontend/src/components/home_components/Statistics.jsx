@@ -1,65 +1,76 @@
 import React, { useState, useEffect } from 'react';
 
 const Statistics = () => {
-  const [data, setData] = useState(null);
+  const apiUrl = import.meta.env.VITE_API_URL;
 
+  const [data, setData] = useState({
+    heading: '',
+    subtitle: '',
+    bgColor: '',
+    textColor: '',
+    stats: [],
+    numbersBgColor: '',
+    numbersTextColor: '',
+  });
+
+    
   useEffect(() => {
-    // Mock API data
-    const mockData = {
-      divider: "", // Replace with your divider image
-      heading:"Numbers That Amaze",
-      bgColor: "#f9f9f9", // Background color for the statistics section
-      textColor: "#333", // Text color for the statistics section
-      statsList: [
-        {
-          value: "500+",
-          description: "Secure Installations",
-          bgColor: "#4A5568", // Background color for this stat
-          textColor: "#fff" // Text color for this stat
-        },
-        {
-          value: "1000+",
-          description: "Cleaning Projects",
-          bgColor: "#2B6CB0", // Background color for this stat
-          textColor: "#fff" // Text color for this stat
-        },
-        {
-          value: "800+",
-          description: "Pest Control Jobs",
-          bgColor: "#DD6B20", // Background color for this stat
-          textColor: "#fff" // Text color for this stat
-        },
-        {
-          value: "1200+",
-          description: "Happy Households",
-          bgColor: "#38A169", // Background color for this stat
-          textColor: "#fff" // Text color for this stat
-        },
-      ],
+    // Mock JSON data
+    const fetchData = async () => {
+      try {
+        const response = await fetch(`${apiUrl}/home/statistics`); // Replace with your API endpoint
+        const data = await response.json();
+        setData(data);
+      } catch (error) {
+        console.error("Error fetching  data:", error);
+      }
     };
 
+
     // Simulating an API call
-    setData(mockData);
+    fetchData()
   }, []);
 
-  if (!data) return <div>Loading...</div>; // Loading state
-
   return (
-    <div className='relative py-16' style={{ backgroundColor: data.bgColor, color: data.textColor }}>
-      <img src={data.divider || ""} className='absolute top-0 z-100 over' />
+    <div
+      className='relative py-16'
+      style={{ backgroundColor: data.bgColor, color: data.textColor }}
+    >
+      <div className="py-6 sm:py-8 lg:py-12">
+        <div className="mx-auto max-w-screen-lg px-4 md:px-8">
+          {/* Text - start */}
+          <div className="mb-8 md:mb-12">
+            <h2 className="mb-4 text-center text-4xl font-bold" style={{ color: data.textColor }}>
+              {data.heading}
+            </h2>
+            <p className="mx-auto max-w-screen-md text-center md:text-lg" style={{ color: data.textColor }}>
+              {data.subtitle}
+            </p>
+          </div>
+          {/* Text - end */}
 
-      <div className='container mx-auto px-4 pt-20 md:pt-40'>
-        <h1 className='text-4xl lg:text-6xl font-bold text-center mb-10'>
-          {data.heading}
-        </h1>
-
-        <div className='grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8 text-center'>
-          {data.statsList.map((stat, index) => (
-            <div key={index} className='p-6 rounded-lg shadow-lg' style={{ backgroundColor: stat.bgColor, color: stat.textColor }}>
-              <h2 className='text-5xl font-bold mb-4'>{stat.value}</h2>
-              <p className='text-lg'>{stat.description}</p>
-            </div>
-          ))}
+          <div
+            className="grid grid-cols-2 gap-6 rounded-lg p-6 md:grid-cols-4 md:gap-8 md:p-8"
+            style={{ backgroundColor: data.numbersBgColor }}
+          >
+            {/* Dynamically generated stats */}
+            {data.stats.map((stat, index) => (
+              <div key={index} className="flex flex-col items-center">
+                <div
+                  className="text-xl font-bold sm:text-2xl md:text-3xl"
+                  style={{ color: data.numbersTextColor }}
+                >
+                  {stat.value}
+                </div>
+                <div
+                  className="text-sm sm:text-base"
+                  style={{ color: data.numbersTextColor }}
+                >
+                  {stat.label}
+                </div>
+              </div>
+            ))}
+          </div>
         </div>
       </div>
     </div>

@@ -52,6 +52,17 @@ const AdminSidebar = ({ isOpen, toggleSidebar }) => {
           </NavLink>
         </li>
 
+        <li>
+          <NavLink
+            to="services" // Update this to your products route
+            className={({ isActive }) =>
+              `flex items-center rounded-lg font-bold p-2 ${isActive ? 'bg-blue-400 text-white' : 'hover:bg-blue-400 hover:text-white'}`
+            }
+          >
+            <FaBox className='mr-2' /> Services 
+          </NavLink>
+        </li>
+
 
         <li>
           <NavLink

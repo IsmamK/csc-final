@@ -1,44 +1,102 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 
 const Hero = () => {
-  // Static data for the hero component
-  const heroData = {
-    divider: "", // You can set the path to your divider image here
-    bgColor: "white", // Set your background color
-    textColor: "#333", // Set your text color
-    title: "We're the one you're looking for",
-    description: "Lorem ipsum, dolor sit amet consectetur adipisicing elit. Obcaecati eum culpa nihil perferendis consectetur voluptas eaque cum odio numquam consequuntur.",
-    buttonText: "Call to Action",
-    imageUrl: "https://img.freepik.com/premium-photo/technical-support-operators-with-headsets-white-background_495423-53547.jpg?w=2000"
-  };
+  // State to hold the hero data
+  const [heroData, setHeroData] = useState({
+    "title": "",
+    "bgColor":"",
+    "textColor":"",
+    "description": "",
+    "divider": "",
+    "image1": "",
+    "image2": "",
+    "altText1": "",
+    "altText2": "",
+    "contactLink": "",
+    "contactText": "",
+    "ctaLink": "",
+    "ctaText": "",
+
+  }
+  );
+  const apiUrl = import.meta.env.VITE_API_URL;
+
+
+  // Fetch data from the API
+  useEffect(() => {
+    const fetchHeroData = async () => {
+      try {
+        const response = await fetch(`${apiUrl}/home/hero`); // Replace with your API endpoint
+        const data = await response.json();
+        setHeroData(data);
+      } catch (error) {
+        console.error("Error fetching hero data:", error);
+      }
+    };
+
+    fetchHeroData();
+  }, []);
+
+  // Return a loading indicator if data is not yet fetched
+  if (!heroData) {
+    return <div>Loading...</div>;
+  }
 
   return (
     <div className="relative">
-      <img src={heroData.divider || ""} className='absolute top-0 z-100' />
+      <img src={heroData.divider || ""} className='absolute top-0 z-100' alt="" />
 
-      <div style={{ backgroundColor: heroData.bgColor, color: heroData.textColor }}>
-        <section className="md:pt-20">
-          <div className="grid max-w-screen-xl px-4 py-8 mx-auto lg:gap-8 xl:gap-0 lg:py-16 lg:grid-cols-12 ">
-            <div className="mr-auto place-self-center lg:col-span-7 mt-10 md:mt-10 ">
-              <h1 className="max-w-2xl mb-4 text-4xl font-extrabold tracking-tight leading-none md:text-5xl xl:text-6xl dark:text-white">
+      <div className="bg-white pb-6 sm:pb-8 lg:pb-12 " style={{backgroundColor:heroData.bgColor,color:heroData.textColor}}>
+        <section className="mx-auto w-3/4 px-4 md:px-8">
+          <div className="mb-8 flex flex-col lg:flex-row justify-between md:mb-16 items-center ">
+            <div className="mb-6 flex w-full flex-col justify-center sm:mb-12 lg:mb-0 lg:w-1/3 lg:pb-24 lg:pt-48">
+              <h1 className="mb-4 text-5xl font-bold  sm:text-5xl md:mb-8 md:text-7xl">
                 {heroData.title}
               </h1>
-              <p className="max-w-2xl mb-6 font-light lg:mb-8 md:text-lg lg:text-xl">
+
+              <p className="max-w-md leading-relaxed  xl:text-lg">
                 {heroData.description}
               </p>
-              
-              <a href="#" className="inline-flex items-center justify-center px-5 py-3 font-medium text-center border-2 border-purple-800 rounded-lg hover:bg-gray-100 focus:ring-4 focus:ring-gray-100 dark:text-white dark:border-gray-700 dark:hover:bg-gray-700 dark:focus:ring-gray-800">
-                {heroData.buttonText}
+            </div>
+
+            <div className="mb-12 flex w-full md:mb-16 lg:w-2/3 h-96">
+              <div className="relative left-12 top-12 z-10 -ml-12 overflow-hidden rounded-lg bg-gray-100 shadow-lg md:left-16 md:top-16 lg:ml-0">
+                <img
+                  src={heroData.image1 || ""}
+                  loading="lazy"
+                  alt={heroData.altText1 || "Hero Image 1"}
+                  className="w-80 h-full md:h-96 md:w-96 object-cover object-center"
+                />
+              </div>
+
+              <div className="overflow-hidden rounded-lg bg-gray-100 shadow-lg">
+                <img
+                  src={heroData.image2 || ""}
+                  loading="lazy"
+                  alt={heroData.altText2 || "Hero Image 2"}
+                  className="w-80 h-full md:h-96 md:w-96 object-cover object-center "
+                />
+              </div>
+            </div>
+          </div>
+
+          <div className="flex flex-col items-center justify-between gap-8 md:flex-row">
+            <div className='flex gap-4'>
+              <a href={heroData.contactLink} className="btn btn-primary text-white">
+                {heroData.contactText}
+              </a>
+
+              <a href={heroData.ctaLink} className={`btn bg-[${heroData.bgColor}] text-[${heroData.textColor}] btn-outline`}>  
+                            {heroData.ctaText}
               </a>
             </div>
-            <div className="lg:mt-0 lg:col-span-5">
-              <img src={heroData.imageUrl} alt="mockup"/>
-            </div>                
+            {/* Social media section */}
+           
           </div>
         </section>
       </div>
     </div>
   );
-}
+};
 
 export default Hero;

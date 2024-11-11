@@ -1,0 +1,161 @@
+[
+    {
+        "slug": "study-abroad-consultation",
+        "title": "Study Abroad ",
+        "description": "Expert guidance to help you achieve your dream of studying abroad.",
+        "heroText": "Paving your way to global education success.",
+        "heroBgColor": "#000000",
+        "heroTextColor": "#bb8585",
+        "heroImage": "https://images.unsplash.com/photo-1556761175-4b46a572b786?auto=format&q=75&fit=crop&w=1000",
+        "featuresBgColor": "#402f2f",
+        "featuresTextColor": "#ffffff",
+        "features": [
+            {
+                "title": "University Selection",
+                "description": "Guidance in selecting the right universities tailored to your goals.",
+                "iconPath": "M3 3h18v18H3V3z",
+                "iconImage": "data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCAzODQgNTEyIj48IS0tIUZvbnQgQXdlc29tZSBGcmVlIDYuNi4wIGJ5IEBmb250YXdlc29tZSAtIGh0dHBzOi8vZm9udGF3ZXNvbWUuY29tIExpY2Vuc2UgLSBodHRwczovL2ZvbnRhd2Vzb21lLmNvbS9saWNlbnNlL2ZyZWUgQ29weXJpZ2h0IDIwMjQgRm9udGljb25zLCBJbmMuLS0+PHBhdGggZmlsbD0iI2ZlZmZmZiIgZD0iTTI5Ny4yIDI0OC45QzMxMS42IDIyOC4zIDMyMCAyMDMuMiAzMjAgMTc2YzAtNzAuNy01Ny4zLTEyOC0xMjgtMTI4UzY0IDEwNS4zIDY0IDE3NmMwIDI3LjIgOC40IDUyLjMgMjIuOCA3Mi45YzMuNyA1LjMgOC4xIDExLjMgMTIuOCAxNy43YzAgMCAwIDAgMCAwYzEyLjkgMTcuNyAyOC4zIDM4LjkgMzkuOCA1OS44YzEwLjQgMTkgMTUuNyAzOC44IDE4LjMgNTcuNUwxMDkgMzg0Yy0yLjItMTItNS45LTIzLjctMTEuOC0zNC41Yy05LjktMTgtMjIuMi0zNC45LTM0LjUtNTEuOGMwIDAgMCAwIDAgMHMwIDAgMCAwYy01LjItNy4xLTEwLjQtMTQuMi0xNS40LTIxLjRDMjcuNiAyNDcuOSAxNiAyMTMuMyAxNiAxNzZDMTYgNzguOCA5NC44IDAgMTkyIDBzMTc2IDc4LjggMTc2IDE3NmMwIDM3LjMtMTEuNiA3MS45LTMxLjQgMTAwLjNjLTUgNy4yLTEwLjIgMTQuMy0xNS40IDIxLjRjMCAwIDAgMCAwIDBzMCAwIDAgMGMtMTIuMyAxNi44LTI0LjYgMzMuNy0zNC41IDUxLjhjLTUuOSAxMC44LTkuNiAyMi41LTExLjggMzQuNWwtNDguNiAwYzIuNi0xOC43IDcuOS0zOC42IDE4LjMtNTcuNWMxMS41LTIwLjkgMjYuOS00Mi4xIDM5LjgtNTkuOGMwIDAgMCAwIDAgMHMwIDAgMCAwczAgMCAwIDBjNC43LTYuNCA5LTEyLjQgMTIuNy0xNy43ek0xOTIgMTI4Yy0yNi41IDAtNDggMjEuNS00OCA0OGMwIDguOC03LjIgMTYtMTYgMTZzLTE2LTcuMi0xNi0xNmMwLTQ0LjIgMzUuOC04MCA4MC04MGM4LjggMCAxNiA3LjIgMTYgMTZzLTcuMiAxNi0xNiAxNnptMCAzODRjLTQ0LjIgMC04MC0zNS44LTgwLTgwbDAtMTYgMTYwIDAgMCAxNmMwIDQ0LjItMzUuOCA4MC04MCA4MHoiLz48L3N2Zz4="
+            },
+            {
+                "title": "Admission Assistance",
+                "description": "Support with applications, essays, and interviews.",
+                "iconPath": "M3 12h18v6H3v-6z"
+            },
+            {
+                "title": "Visa Support",
+                "description": "Assistance in preparing visa documentation and interview prep.",
+                "iconPath": "M3 9h18v6H3V9z"
+            },
+            {
+                "title": "Scholarship Advice",
+                "description": "Find scholarship opportunities that match your profile.",
+                "iconPath": "M21 12L3 4v16l18-8z"
+            },
+            {
+                "title": "Accommodation Guidance",
+                "description": "Help in finding safe and affordable accommodation abroad.",
+                "iconPath": "M4 4h16v16H4V4z"
+            },
+            {
+                "title": "Pre-De Prep",
+                "description": "Workshops on cultural orientation, budgeting, and more.",
+                "iconPath": "M12 2L2 22h20L12 2z"
+            }
+        ]
+    },
+    {
+        "slug": "scholarship-funding-guidance",
+        "title": "Scholarship Funding Guidance",
+        "description": "Comprehensive advice on securing scholarships and financial aid.",
+        "heroText": "Turn your dreams into reality with financial support.",
+        "heroImage": "https://images.unsplash.com/photo-1556740749-887f6717d7e4?auto=format&q=75&fit=crop&w=1000",
+        "features": [
+            {
+                "title": "Scholarship Search",
+                "description": "Discover scholarship opportunities worldwide.",
+                "iconPath": "M5 12h14v6H5v-6z"
+            },
+            {
+                "title": "Application Strategy",
+                "description": "Expert tips to increase your chances of scholarship success.",
+                "iconPath": "M4 12h16v6H4v-6z"
+            },
+            {
+                "title": "Essay Coaching",
+                "description": "Craft compelling essays that showcase your strengths.",
+                "iconPath": "M12 2L2 22h20L12 2z"
+            },
+            {
+                "title": "Documentation Assistance",
+                "description": "Get guidance on transcripts, recommendation letters, and more.",
+                "iconPath": "M3 3h18v18H3V3z"
+            },
+            {
+                "title": "Budget Planning",
+                "description": "Financial planning for your academic journey abroad.",
+                "iconPath": "M4 4h16v16H4V4z"
+            },
+            {
+                "title": "Follow-Up Support",
+                "description": "Assistance with scholarship renewals and maintaining eligibility.",
+                "iconPath": "M21 12L3 4v16l18-8z"
+            }
+        ],
+        "heroBgColor": "#ffffff",
+        "heroTextColor": "#000000",
+        "featuresBgColor": "#ffffff",
+        "featuresTextColor": "#000000"
+    },
+    {
+        "slug": "test-prep-services",
+        "title": "Test Prep Services",
+        "description": "Prepare for exams like IELTS, TOEFL, GRE, and SAT with expert resources.",
+        "heroText": "Achieve your best score with structured guidance.",
+        "heroImage": "https://images.unsplash.com/photo-1579202673506-ca3ce28943ef?auto=format&q=75&fit=crop&w=1000",
+        "features": [
+            {
+                "title": "Personalized Study Plans",
+                "description": "Study plans tailored to your test and timeline.",
+                "iconPath": "M12 2L2 22h20L12 2z"
+            },
+            {
+                "title": "Practice Tests",
+                "description": "Simulated exams to prepare you under real test conditions.",
+                "iconPath": "M4 4h16v16H4V4z"
+            },
+            {
+                "title": "One-on-One Tutoring",
+                "description": "Focused sessions on weak areas with skilled tutors.",
+                "iconPath": "M5 12h14v6H5v-6z"
+            },
+            {
+                "title": "Resource Materials",
+                "description": "Access to practice questions, videos, and books.",
+                "iconPath": "M3 3h18v18H3V3z"
+            },
+            {
+                "title": "Score Analysis",
+                "description": "Detailed feedback to understand and improve your score.",
+                "iconPath": "M12 2L2 22h20L12 2z"
+            },
+            {
+                "title": "Time Management Training",
+                "description": "Learn efficient strategies for managing time on exams.",
+                "iconPath": "M4 4h16v16H4V4z"
+            }
+        ]
+    },
+    {
+        "slug": "service-finally-increases",
+        "title": "Service FINALLY INCREASES",
+        "description": "",
+        "heroText": "",
+        "heroBgColor": "#000000",
+        "heroTextColor": "#ffffff",
+        "featuresBgColor": "#000000",
+        "featuresTextColor": "#ffffff",
+        "heroImage": "",
+        "features": [
+            {
+                "title": "Feature is there",
+                "description": "tralala",
+                "iconPath": ""
+            },
+            {
+                "title": "Bua",
+                "description": "hahsa",
+                "iconPath": ""
+            },
+            {
+                "title": "bla",
+                "description": "hsaajsh",
+                "iconPath": ""
+            },
+            {
+                "title": "klaa",
+                "description": "sajsa",
+                "iconPath": ""
+            }
+        ]
+    }
+]

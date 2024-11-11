@@ -1,68 +1,35 @@
-import React, { useState } from 'react';
+import React, { useState,useEffect } from 'react';
 
-const GridCards = ({ divider, bgColor, textColor }) => {
-  const cardData = {
-    title: "Explore Beautiful Destinations",
-    subtitle: "Choose your dream destination and explore nature",
-    gridCards: [
-      {
-        image: "https://flowbite.s3.amazonaws.com/docs/gallery/square/image-1.jpg",
-        title: "Mountain View",
-        description: "A beautiful view of the mountains during sunset.",
-        flipBgColor: "#f5c6a5",
-        flipTextColor: "#333",
-      },
-      {
-        image: "https://flowbite.s3.amazonaws.com/docs/gallery/square/image-2.jpg",
-        title: "Beachfront",
-        description: "Relax by the calming waves and sandy beach.",
-        flipBgColor: "#a5d5f5",
-        flipTextColor: "#222",
-      },
-      {
-        image: "https://flowbite.s3.amazonaws.com/docs/gallery/square/image-3.jpg",
-        title: "City Lights",
-        description: "An amazing view of the city skyline at night.",
-        flipBgColor: "#f5e1a5",
-        flipTextColor: "#111",
-      },
-      {
-        image: "https://flowbite.s3.amazonaws.com/docs/gallery/square/image-4.jpg",
-        title: "Forest Trail",
-        description: "Hike through lush green forests and enjoy nature.",
-        flipBgColor: "#c3f5a5",
-        flipTextColor: "#222",
-      },
-      {
-        image: "https://flowbite.s3.amazonaws.com/docs/gallery/square/image-5.jpg",
-        title: "Desert Dunes",
-        description: "Experience the serenity of the vast desert landscape.",
-        flipBgColor: "#f5d2a5",
-        flipTextColor: "#333",
-      },
-      {
-        image: "https://flowbite.s3.amazonaws.com/docs/gallery/square/image-6.jpg",
-        title: "Lake House",
-        description: "Enjoy a peaceful stay by the lake with scenic views.",
-        flipBgColor: "#d3a5f5",
-        flipTextColor: "#222",
-      },
-      {
-        image: "https://flowbite.s3.amazonaws.com/docs/gallery/square/image-7.jpg",
-        title: "Snowy Peaks",
-        description: "Feel the chill of snow-capped mountains in winter.",
-        flipBgColor: "#a5f5f2",
-        flipTextColor: "#111",
-      },
-      {
-        image: "https://flowbite.s3.amazonaws.com/docs/gallery/square/image-8.jpg",
-        title: "Countryside",
-        description: "Escape to the quiet and tranquility of the countryside.",
-        flipBgColor: "#f5a5a5",
-        flipTextColor: "#222",
-      },
-    ],
-  };
+const GridCards = ({ divider, }) => {
+  const apiUrl = import.meta.env.VITE_API_URL;
+
+
+  const [cardData,setCardData] = useState({
+    "title": "",
+    "subtitle": "",
+    "bgColor": "",
+    "textColor": "",
+    "gridCards": [
+    ]
+  
+  })
+
+  useEffect(() => {
+    // Mock JSON data
+    const fetchData = async () => {
+      try {
+        const response = await fetch(`${apiUrl}/home/grid-cards`); // Replace with your API endpoint
+        const data = await response.json();
+        setCardData(data);
+      } catch (error) {
+        console.error("Error fetching  data:", error);
+      }
+    };
+
+
+    // Simulating an API call
+    fetchData()
+  }, []);
 
   const [flippedCardIndex, setFlippedCardIndex] = useState(null);
 
@@ -75,7 +42,7 @@ const GridCards = ({ divider, bgColor, textColor }) => {
   };
 
   return (
-    <div className="relative w-full" style={{ backgroundColor: bgColor, color: textColor }}>
+    <div className="relative w-full" style={{ backgroundColor: cardData.bgColor, color: cardData.textColor }}>
       {divider && <img src={divider} className="absolute top-0 z-10 w-full" alt="Divider" />}
 
       <div className="p-10 md:p-20 lg:p-30 mx-auto max-w-96 md:max-w-[1000px] lg:max-w-[1500px]">

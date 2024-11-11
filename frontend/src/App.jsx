@@ -14,6 +14,7 @@ import ContactEditor from "./components/editor_components/ContactEditor";
 import GalleryEditor from "./components/editor_components/GalleryEditor";
 import ProjectsEditor from "./components/editor_components/ProjectsEditor";
 import LayoutsEditor from "./components/editor_components/LayoutsEditor";
+import ServicesEditor from "./components/editor_components/ServicesEditor";
 
 
 
@@ -63,6 +64,7 @@ const App = () => {
         { path: 'layouts', element: <LayoutsEditor /> },
         { path: 'home', element: <HomeEditor /> },
         { path: 'about', element: <AboutEditor /> },
+        { path: 'services', element: <ServicesEditor /> },
         { path: 'contact', element: <ContactEditor /> },
         { path: 'gallery', element: <GalleryEditor /> },
         { path: 'projects', element: <ProjectsEditor /> },

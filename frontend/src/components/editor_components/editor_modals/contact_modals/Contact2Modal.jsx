@@ -1,115 +1,224 @@
-import React, { useEffect, useState } from 'react';
+import React, { useState, useEffect } from "react";
+import { HexColorPicker } from "react-colorful";
 
 const Contact2Modal = ({ isOpen, onClose }) => {
-  const [contactData, setContactData] = useState({
-    title: '',
-    subtitle: '',
-    phone: '',
-    email: '',
-    address: '',
-    imageUrl: '',
+  const apiUrl = import.meta.env.VITE_API_URL;
+
+  const [formData, setFormData] = useState({
+    title: "",
+    subtitle: "",
+    phone: "",
+    email: "",
+    address: "",
+    imageUrl: "",
+    bgColor: "",
+    textColor: "",
   });
 
-  const fetchContactData = async () => {
-    const data = {
-      title: "Contact Us",
-      subtitle: "Reach Out To Us",
-      phone: "470-601-1911",
-      email: "Pagedone1234@gmail.com",
-      address: "789 Oak Lane, Lakeside, TX 54321",
-      imageUrl: "https://pagedone.io/asset/uploads/1696245837.png",
-    };
-    setContactData(data);
-  };
-
   useEffect(() => {
-    fetchContactData();
+    // Fetch data from the API
+    fetch(`${apiUrl}/contact/contact2/`)
+      .then((res) => res.json())
+      .then((data) => {
+        console.log(data);
+        setFormData(data);
+      })
+      .catch((error) => console.error("Error fetching data:", error));
   }, []);
 
-  // Update form values on input change
-  const handleInputChange = (e) => {
+  const handleBgColorChange = (color) => {
+    setFormData((prevData) => ({
+      ...prevData,
+      bgColor: color,
+    }));
+  };
+
+  const handleTextColorChange = (color) => {
+    setFormData((prevData) => ({
+      ...prevData,
+      textColor: color,
+    }));
+  };
+
+  const handleChange = (e) => {
     const { name, value } = e.target;
-    setContactData((prevData) => ({
+    setFormData((prevData) => ({
       ...prevData,
       [name]: value,
     }));
   };
 
-  const handleSubmit = (e) => {
-    e.preventDefault();
-    console.log('Submitted Data:', contactData);
-    onClose();
+  const handleImageChange = async (e) => {
+    const convertToBase64 = (file) => {
+      return new Promise((resolve, reject) => {
+        const reader = new FileReader();
+        reader.onload = () => resolve(reader.result);
+        reader.onerror = (error) => reject(error);
+        reader.readAsDataURL(file); // Convert to Base64
+      });
+    };
+
+ 
+
+
+    const file = e.target.files[0];
+    const imageBase64 = await convertToBase64(file)
+    if (file) {
+      setFormData((prevData) => ({
+        ...prevData,
+        imageUrl: imageBase64,
+      }));
+    }
   };
 
+  
+
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+
+  
+  
+
+    // Send PATCH request
+    fetch(`${apiUrl}/contact/contact2/`, {
+      method: "PATCH",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify(formData),
+    })
+      .then((res) => res.json())
+      .then((data) => {
+        console.log("Updated Data:", data);
+        onClose();
+        window.location.reload();
+      })
+      .catch((error) => console.error("Error updating data:", error));
+  };
+
+  if (!isOpen) return null;
+
   return (
-    <dialog id="contact2_modal" className={`modal ${isOpen ? 'modal-open' : ''}`}>
-      <div className="modal-box w-11/12 max-w-5xl relative">
-      <button onClick={onClose} className="btn btn-sm btn-circle absolute right-2 top-2">
-          ✕
-        </button>
-        <h3 className="font-bold text-lg mb-4">Edit Contact Data</h3>
-        <form onSubmit={handleSubmit} className="flex flex-col gap-4">
-          <label className="font-bold mb-1">Title:</label>
-          <input
-            type="text"
-            name="title"
-            className="input border border-gray-300 rounded p-2"
-            value={contactData.title}
-            onChange={handleInputChange}
-          />
+    <div className="fixed inset-0 z-10 bg-black bg-opacity-50 flex items-center justify-center overflow-y-auto">
+      <div className="bg-white p-8 rounded shadow-lg max-w-xl w-full max-h-screen overflow-y-auto relative my-8 mx-4">
+        <h2 className="text-2xl mb-4">Edit Contact Information</h2>
+        <form onSubmit={handleSubmit}>
+          <div className="mb-4">
+            <label className="block font-bold">Title</label>
+            <input
+              type="text"
+              name="title"
+              value={formData.title}
+              onChange={handleChange}
+              className="border p-2 rounded-lg"
+            />
+          </div>
+          <div className="mb-4">
+            <label className="block font-bold">Subtitle</label>
+            <textarea
+              name="subtitle"
+              value={formData.subtitle}
+              onChange={handleChange}
+              className="border p-2 rounded-lg"
+            ></textarea>
+          </div>
+          <div className="mb-4">
+            <label className="block font-bold">Phone</label>
+            <input
+              name="phone"
+              value={formData.phone}
+              onChange={handleChange}
+              className="border p-2 rounded-lg"
+            ></input>
+          </div>
+          <div className="mb-4">
+            <label className="block font-bold">Email</label>
+            <input
+              name="email"
+              value={formData.email}
+              onChange={handleChange}
+              className="border p-2 rounded-lg"
+            ></input>
+          </div>
+          <div className="mb-4">
+            <label className="block font-bold">Address</label>
+            <textarea
+              name="address"
+              value={formData.address}
+              onChange={handleChange}
+              className="border p-2 rounded-lg"
+            ></textarea>
+          </div>
 
-          <label className="font-bold mb-1">Subtitle:</label>
-          <input
-            type="text"
-            name="subtitle"
-            className="input border border-gray-300 rounded p-2"
-            value={contactData.subtitle}
-            onChange={handleInputChange}
-          />
+          {/* Background and Text Color Pickers */}
+          <div className="mb-4">
+            <label className="block font-bold">Background Color</label>
+            <div className="hex flex items-center">
+              <HexColorPicker
+                color={formData.bgColor}
+                onChange={handleBgColorChange}
+                className="mr-4"
+              />
+              <input
+                type="text"
+                name="bgColor"
+                value={formData.bgColor}
+                onChange={handleChange}
+                className="border p-2 rounded-lg"
+              />
+            </div>
+          </div>
+          <div className="mb-4">
+            <label className="block font-bold">Text Color</label>
+            <div className="hex flex items-center">
+              <HexColorPicker
+                color={formData.textColor}
+                onChange={handleTextColorChange}
+                className="mr-4"
+              />
+              <input
+                type="text"
+                name="textColor"
+                value={formData.textColor}
+                onChange={handleChange}
+                className="border p-2 rounded-lg"
+              />
+            </div>
+          </div>
 
-          <label className="font-bold mb-1">Phone:</label>
-          <input
-            type="tel"
-            name="phone"
-            className="input border border-gray-300 rounded p-2"
-            value={contactData.phone}
-            onChange={handleInputChange}
-          />
+          <div className="mb-4">
+            <label className="block font-bold">Image</label>
+            <input
+              type="file"
+              accept="image/*"
+              onChange={handleImageChange}
+              className="border p-2 rounded-lg"
+            />
+            {formData.imageUrl && (
+              <img
+                src={formData.imageUrl}
+                alt="Contact"
+                className="mt-2 max-h-32 object-cover"
+              />
+            )}
+          </div>
 
-          <label className="font-bold mb-1">Email:</label>
-          <input
-            type="email"
-            name="email"
-            className="input border border-gray-300 rounded p-2"
-            value={contactData.email}
-            onChange={handleInputChange}
-          />
-
-          <label className="font-bold mb-1">Address:</label>
-          <input
-            type="text"
-            name="address"
-            className="input border border-gray-300 rounded p-2"
-            value={contactData.address}
-            onChange={handleInputChange}
-          />
-
-          <label className="font-bold mb-1">Background Pattern Image URL:</label>
-          <input
-            type="text"
-            name="imageUrl"
-            className="input border border-gray-300 rounded p-2"
-            value={contactData.imageUrl}
-            onChange={handleInputChange}
-          />
-
-          <div className="modal-action mt-4">
-            <button type="button" className="btn" onClick={onClose}>Cancel</button>
-            <button type="submit" className="btn btn-primary">Save</button>
+          {/* Save and Cancel Buttons */}
+          <div className="flex justify-end mt-4">
+            <button
+              type="button"
+              onClick={onClose}
+              className="bg-gray-300 p-2 rounded mr-2"
+            >
+              Cancel
+            </button>
+            <button type="submit" className="bg-blue-500 text-white p-2 rounded">
+              Save Changes
+            </button>
           </div>
         </form>
       </div>
-    </dialog>
+    </div>
   );
 };
 
