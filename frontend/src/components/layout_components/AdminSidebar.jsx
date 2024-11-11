@@ -95,6 +95,17 @@ const AdminSidebar = ({ isOpen, toggleSidebar }) => {
             <FaFileInvoice className='mr-2' /> Contact
           </NavLink>
         </li>
+
+        <li>
+          <NavLink
+            to="/" // Update this to your products route
+            className={({ isActive }) =>
+              `flex items-center rounded-lg font-bold p-2 ${isActive ? 'bg-blue-400 text-white' : 'hover:bg-blue-400 hover:text-white'}`
+            }
+          >
+            <FaBox className='mr-2' /> Visit Live Website 
+          </NavLink>
+        </li>
        
       </ul>
       <div className="flex mt-20 justify-between items-center border-t border-gray-300 pt-8">
